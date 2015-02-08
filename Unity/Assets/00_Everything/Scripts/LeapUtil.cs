@@ -24,9 +24,15 @@ namespace Leap {
 		{
 			leapPoint.z *= -1.0f; // right ahnd to left hand rule
 			Vector normalized = iBox.NormalizePoint(leapPoint, false);
-//			normalized += new Vector(0.5f, 0f, 0.5f);//recenter origin
-			Vector n = normalized * 1f; //scale
+			normalized -= new Vector(0.5f, -.5f, 0.5f);//recenter origin
+		
+			Vector n = normalized * 5f; //scale
 			return new Vector3 (n.x,n.y,n.z);
 		}
+
+//		public static Vector3 LeapToWorld(Vector leapPoint, Leap.Matrix leapMatrix)
+//		{
+//			return leapMatrix.transform_position(leapPoint);
+//		}
 	}
 }
