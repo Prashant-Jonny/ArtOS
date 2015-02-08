@@ -8,6 +8,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using PressureLib;
+using Leap;
 
 class Point
 {
@@ -18,6 +19,9 @@ class Point
 
 public class drawApp : MonoBehaviour
 {
+	Controller controller; // leap controller
+
+
 	public Shader shader;
 	private Material penmat;
 	
@@ -37,6 +41,9 @@ public class drawApp : MonoBehaviour
 
 	void Start ()
 	{			
+		controller = new Controller();
+		controller.EnableGesture(Gesture.GestureType.TYPECIRCLE);
+
 		if (PressureManager.instance==null) Debug.LogError("PressureManager not found, please drag the prefab to your hierarchy");
 		meshPen = new Mesh ();
 		penmat = new Material (shader);
@@ -48,6 +55,7 @@ public class drawApp : MonoBehaviour
 	
 	void Update ()
 	{
+		ProcessLeap();
 		float pressure = 1;
 		if (Input.GetMouseButton(0) && PressureManager.normalPressure == 0) pressure = 1;
 		else pressure = PressureManager.normalPressure;
@@ -246,6 +254,30 @@ public class drawApp : MonoBehaviour
 		if(Input.GetKey(KeyCode.DownArrow)) transform.Rotate(s, 0, 0);
 		if(Input.GetKey(KeyCode.LeftArrow)) transform.Rotate(0, -s, 0);
 		if(Input.GetKey(KeyCode.RightArrow)) transform.Rotate(0, s, 0);
+	}
+	
+	void ProcessLeap ()
+	{
+		Frame frame = controller.Frame();
+		HandList hands = frame.Hands;
+		foreach (Hand h in hands)
+		{
+			if (h.IsRight)
+			{
+				foreach (Gesture g in frame.Gestures())
+				{
+					Debug.Log ("gesture: " + g.Type);
+					if (g.Type == Gesture.GestureType.TYPECIRCLE)
+					{
+						Transform webcam = transform.FindChild("webcam");
+						if (g.State == Gesture.GestureState.STATESTOP)
+							webcam.GetComponent<Renderer>().enabled = false;
+						if (g.State == Gesture.GestureState.STATESTART)
+							webcam.GetComponent<Renderer>().enabled = true;
+					}
+				}
+			}
+		}
 	}
 }
 
