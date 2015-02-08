@@ -30,9 +30,9 @@ namespace Leap {
 			return new Vector3 (n.x,n.y,n.z);
 		}
 
-//		public static Vector3 LeapToWorld(Vector leapPoint, Leap.Matrix leapMatrix)
-//		{
-//			return leapMatrix.transform_position(leapPoint);
-//		}
+		public static Vector3 HandToDirection(Hand hand)
+		{
+			return new Vector3(hand.Direction.x, hand.Direction.y, -hand.Direction.z);
+		}
 	}
 }

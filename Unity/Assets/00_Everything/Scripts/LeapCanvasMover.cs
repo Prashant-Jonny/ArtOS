@@ -5,6 +5,7 @@ using Leap;
 public class LeapCanvasMover : MonoBehaviour 
 {
 	public GameObject canvas;
+	public float turnUpLimit;
 
 	Controller controller;
 	Frame frame;
@@ -31,7 +32,7 @@ public class LeapCanvasMover : MonoBehaviour
 		if (lHand.IsValid)
 		{
 			float roll = lHand.PalmNormal.Roll;
-			if (roll > 2 || roll < -2) // if left hand turned up
+			if (roll > turnUpLimit || roll < -turnUpLimit) // if left hand turned up
 			{
 				MoveCanvas(lHand);
 			} 
@@ -41,7 +42,7 @@ public class LeapCanvasMover : MonoBehaviour
 		if (rHand.IsValid)
 		{
 			float roll = rHand.PalmNormal.Roll;
-			if (roll > 2 || roll < -2) // if right hand turned up
+			if (roll > turnUpLimit || roll < -turnUpLimit) // if right hand turned up
 			{
 
 			}
@@ -52,8 +53,8 @@ public class LeapCanvasMover : MonoBehaviour
 	{
 		Vector3 pos = LeapUtil.LeapToWorld(hand.PalmPosition,frame.InteractionBox);
 		canvas.transform.position = pos;
+		canvas.transform.forward = LeapUtil.HandToDirection(hand);
 	}
-
 
 
 	void GetHands (HandList hands)

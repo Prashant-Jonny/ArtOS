@@ -15,9 +15,6 @@ public class WebcamTexture : MonoBehaviour {
 		gameObject.GetComponent<Renderer>().material.mainTexture = webcam;
 		webcam.Play();
 
-//		WebCamTexture webcamTexture = new WebCamTexture();
-//		this.GetComponent<Renderer>().material.mainTexture = webcamTexture;
-//		webcamTexture.Play();
 	}
 	
 	void Update () 
