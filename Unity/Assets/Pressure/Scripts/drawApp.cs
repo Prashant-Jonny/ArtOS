@@ -21,6 +21,7 @@ public class drawApp : MonoBehaviour
 {
 	Controller controller; // leap controller
 
+	public Camera cam;
 
 	public Shader shader;
 	private Material penmat;
@@ -205,7 +206,7 @@ public class drawApp : MonoBehaviour
 	
 	Vector3 GetWorldPoint ()
 	{
-		return Camera.main.ScreenToWorldPoint (new Vector3 (Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z * -1.0f));
+		return cam.ScreenToWorldPoint (new Vector3 (Input.mousePosition.x, Input.mousePosition.y, cam.transform.position.z * -1.0f));
 	}
 	
 	Vector3[] resizeVertices (Vector3[] ovs, int ns)
@@ -260,24 +261,31 @@ public class drawApp : MonoBehaviour
 	{
 		Frame frame = controller.Frame();
 		HandList hands = frame.Hands;
+		Transform webcam = transform.FindChild("webcam");
+
 		foreach (Hand h in hands)
 		{
 			if (h.IsRight)
 			{
+				// right hand erase gesture 
 				foreach (Gesture g in frame.Gestures())
 				{
 					Debug.Log ("gesture: " + g.Type);
 					if (g.Type == Gesture.GestureType.TYPECIRCLE)
 					{
-						Transform webcam = transform.FindChild("webcam");
 						if (g.State == Gesture.GestureState.STATESTOP)
-							webcam.GetComponent<Renderer>().enabled = false;
+							ClearMesh();
 						if (g.State == Gesture.GestureState.STATESTART)
-							webcam.GetComponent<Renderer>().enabled = true;
+							ClearMesh();
 					}
 				}
 			}
 		}
+	}
+
+	void ClearMesh ()
+	{
+		meshPen.Clear();
 	}
 }
 

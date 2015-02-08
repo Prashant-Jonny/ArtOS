@@ -1,7 +1,0 @@
-// THIRD PARTY LIST
-// Third Party Stuff that I've used but won't be in the GIT
-// The purpose of this file is to let me know in the future what plugins I used because
-// I don't want the plugins in the GIT
-
-LeapMotionCoreAssets2.2
-LeapMotionVRAssets
