@@ -21,21 +21,41 @@ public class LeapCanvasMover : MonoBehaviour
 		lHand = new Hand();
 		rHand = new Hand();
 	}
+
+	bool grabbing = false;
+	bool grabbingToggle = false;
 	
 	void Update () 
 	{
 		frame = controller.Frame();
 		HandList hands = frame.Hands;
 
+
 		GetHands (hands);
 
 		if (lHand.IsValid)
 		{
-			float roll = lHand.PalmNormal.Roll;
-			if (roll > turnUpLimit || roll < -turnUpLimit) // if left hand turned up
+			float lGrab = lHand.GrabStrength;
+			float lPinch = lHand.PinchStrength;
+//			print (lGrab);
+			if (lGrab == 1 )
 			{
+				if(!grabbingToggle)
+				{
+					grabbing = !grabbing;
+				}
+				grabbingToggle = true;
+			} else {
+				grabbingToggle = false;
+			}
+//			float roll = lHand.PalmNormal.Roll;
+//			if (roll > turnUpLimit || roll < -turnUpLimit) // if left hand turned up
+//			{
+//				MoveCanvas(lHand);
+//			}
+
+			if(grabbing)
 				MoveCanvas(lHand);
-			} 
 		}
 
 

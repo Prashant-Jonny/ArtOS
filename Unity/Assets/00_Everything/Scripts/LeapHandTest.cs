@@ -27,10 +27,6 @@ public class LeapHandTest : MonoBehaviour {
 		ToolList tools = frame.Tools;
 		Vector translation = frame.Translation(controller.Frame(1));
 
-
-
-
-
 //		Debug.Log (translation);
 
 //		foreach (Gesture g in frame.Gestures())
