@@ -4,31 +4,50 @@ using Leap;
 
 namespace UIHandTest1 
 {
-public class UIHand : MonoBehaviour 
-{
-	public GameObject leapMotionOVRController = null;
-	public HandController handController = null;
-	
-	// Use this for initialization
-	void Start () {
-	}
-	
-	// Update is called once per frame
-	void LateUpdate () {
-		if (leapMotionOVRController == null || handController == null)
-			return;
-		
-		HandModel[] hands = handController.GetAllGraphicsHands();
-		if (hands.Length > 1)
+	public class UIHand : MonoBehaviour 
+	{
+		public HandController handController = null;
+		public Hand handL;
+		public Hand handR;
+
+		// Use this for initialization
+		void Start ()
 		{
-			Vector3 direction0 = (hands[0].GetPalmPosition() - handController.transform.position).normalized;
-			Vector3 normal0 = hands[0].GetPalmNormal().normalized;
-			
-			Vector3 direction1 = (hands[1].GetPalmPosition() - handController.transform.position).normalized;
-			Vector3 normal1 = hands[1].GetPalmNormal().normalized;
 
 		}
-	}
 
-}
+		// Update is called once per frame
+		void LateUpdate () 
+		{
+			if (handController == null)
+				return;
+			
+			HandModel[] hands = handController.GetAllGraphicsHands();
+			if (hands.Length > 0)
+			{
+				for(int i=0; i < hands.Length; i++) // go through all hands in scene
+				{
+					Hand hand = hands[0].GetLeapHand(); // convert to leap hand
+					// LEFT HAND
+					if (hand.IsLeft)
+					{
+						FingerList fingers = hand.Fingers; // all fingers
+						foreach (Finger finger in fingers) // go through all the fingers
+						{
+							if (finger.Type == Finger.FingerType.TYPE_INDEX) // get index finger
+							{
+								Finger index = finger;
+								Bone indexB3 = index.Bone (Bone.BoneType.TYPE_DISTAL); // get the bone
+								Vector3 indexB3Pos = indexB3.Center.ToUnityScaled();
+								Debug.DrawRay(indexB3Pos,Vector3.up);
+							}
+						}
+					}
+
+					// RIGHT HAND
+				}
+			}
+//			Debug.DrawRay(finger0Pos,Vector3.up,Color.red);
+		}
+	}
 }
