@@ -2,6 +2,7 @@
 using System.Collections;
 using Leap;
 
+namespace WacomTest1 { 
 public class LeapCameraMover : MonoBehaviour {
 
 	Controller controller;
@@ -27,4 +28,4 @@ public class LeapCameraMover : MonoBehaviour {
 //		velocity += trans;
 //		transform.position += velocity;
 	}
-}
+}}

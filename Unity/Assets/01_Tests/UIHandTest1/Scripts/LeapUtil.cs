@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Leap;
 
-namespace Leap {
+namespace Leap { // need the leap namespace for leap specific callbacks
 	public class LeapUtil
 	{
 		public static Vector3 ToPositionVector3 (Vector position)

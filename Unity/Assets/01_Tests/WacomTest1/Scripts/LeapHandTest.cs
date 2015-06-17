@@ -2,6 +2,7 @@
 using System.Collections;
 using Leap;
 
+namespace WacomTest1 { 
 public class LeapHandTest : MonoBehaviour {
 
 	Controller controller;
@@ -49,4 +50,4 @@ public class LeapHandTest : MonoBehaviour {
 //		}
 //		lastFrame = controller.Frame();
 	}
-}
+}}

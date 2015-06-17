@@ -2,6 +2,7 @@
 using System.Collections;
 using Leap;
 
+namespace WacomTest1 { 
 public class LeapCanvasMover : MonoBehaviour 
 {
 	public GameObject canvas;
@@ -93,4 +94,4 @@ public class LeapCanvasMover : MonoBehaviour
 		}
 	}
 
-}
+}}

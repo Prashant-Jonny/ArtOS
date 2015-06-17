@@ -2,6 +2,7 @@
 using System.Collections;
 using Leap;
 
+namespace WacomTest1{
 public class HandUI : MonoBehaviour 
 {
 	Controller controller;
@@ -78,4 +79,4 @@ public class HandUI : MonoBehaviour
 		}
 	}
 
-}
+}}

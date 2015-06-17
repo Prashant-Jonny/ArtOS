@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+namespace WacomTest1 { 
 public class WebcamTexture : MonoBehaviour {
 
 	void Start () 
@@ -21,4 +23,4 @@ public class WebcamTexture : MonoBehaviour {
 	{
 	
 	}
-}
+}}
