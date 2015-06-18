@@ -41,7 +41,7 @@ public class HandUI : MonoBehaviour
 		}
 
 		if (lHandSpawn != null)
-			lHandSpawn.transform.position = LeapUtil.LeapToWorld(lHand.PalmPosition,frame.InteractionBox);
+			lHandSpawn.transform.position = LeapUtil.LeapToWorldPos(lHand.PalmPosition, new HandController());
 
 		if (rHand.IsValid)
 		{
@@ -56,7 +56,7 @@ public class HandUI : MonoBehaviour
 	void SpawnLHand()
 	{
 		lHandSpawned = true;
-		Vector3 pos = LeapUtil.LeapToWorld(lHand.PalmPosition,frame.InteractionBox);
+		Vector3 pos = LeapUtil.LeapToWorldPos(lHand.PalmPosition,new HandController());
 		Debug.Log (pos);
 		lHandSpawn = Instantiate(Resources.Load ("thing"),pos,Quaternion.identity) as GameObject;
 	}

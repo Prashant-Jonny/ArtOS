@@ -14,7 +14,7 @@ using Leap;
 
 		public static Vector3 LeapToWorldRot(Leap.Vector direction, HandController handController)
 		{
-			Vector3 unityDirection = direction.ToUnityScaled(false)
+			Vector3 unityDirection = direction.ToUnityScaled(false);
 			return handController.transform.TransformPoint(unityDirection);
 		}
 

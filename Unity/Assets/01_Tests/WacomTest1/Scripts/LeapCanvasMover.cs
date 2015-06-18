@@ -72,9 +72,9 @@ public class LeapCanvasMover : MonoBehaviour
 
 	void MoveCanvas(Hand hand)
 	{
-		Vector3 pos = LeapUtil.LeapToWorld(hand.PalmPosition,frame.InteractionBox);
+		Vector3 pos = LeapUtil.LeapToWorldPos(hand.PalmPosition,new HandController());
 		canvas.transform.position = pos;
-		canvas.transform.forward = LeapUtil.HandToDirection(hand);
+		canvas.transform.forward = LeapUtil.LeapToWorldRot(hand.Direction, new HandController());
 	}
 
 
