@@ -39,12 +39,10 @@ namespace UIHandTest1
 							{
 								Finger index = finger;
 								Bone indexB3 = index.Bone (Bone.BoneType.TYPE_DISTAL); // get the bone
-								Vector3 indexB3WorldPos = LeapUtil.LeapToWorldPos(indexB3.Center, handController);
-//								square.position = indexB3WorldPos;
-//								Leap.Vector indexB3direction = finger.Direction;
-//								Vector3 unityDirection = direction.ToUnityScaled(false)
-//									Vector3 worldDirection = handController.transform.TransformPoint(unityDirection);
-//								Debug.DrawRay(indexB3WorldPos,indexB3.Direction);
+								Vector3 indexB3Pos = LeapUtil.LeapToWorldPos(indexB3.Center, handController);
+								Vector3 indexB3Rot = LeapUtil.LeapToWorldRot(indexB3.Direction, handController);
+//								square.position = indexB3Pos;
+								Debug.DrawRay(indexB3Pos,indexB3Rot);
 							}
 						}
 					}
