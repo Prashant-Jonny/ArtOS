@@ -22,6 +22,7 @@ using Leap;
 		{
 			//Angle between metacarpal and distal phalange bones
 			Vector metacarpalDirection = finger.Bone(Bone.BoneType.TYPE_INTERMEDIATE).Basis.zBasis * -1f;
+//			Vector metacarpalDirection = finger.Hand.PalmNormal; // experimenting with using palm instead
 			Vector distalPhalangeDirection = finger.Bone(Bone.BoneType.TYPE_DISTAL).Basis.zBasis * -1f;
 			float rawangle = metacarpalDirection.AngleTo(distalPhalangeDirection) * 180/Mathf.PI;
 			
@@ -31,6 +32,11 @@ using Leap;
 			if(finger.Hand.IsLeft) boneXBasis = boneXBasis * -1f; //Left hand uses a left-hand basis
 			int sign = (crossBones.Dot(boneXBasis) >= 0) ? 1 : -1;
 			return sign * rawangle;  
+		}
+
+		public static float Remap (float value, float from1, float to1, float from2, float to2) 
+		{
+			return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
 		}
 
 //		public static Vector3 ToPositionVector3 (Vector position)

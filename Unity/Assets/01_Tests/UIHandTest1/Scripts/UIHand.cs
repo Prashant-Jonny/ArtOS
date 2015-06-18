@@ -13,6 +13,7 @@ namespace UIHandTest1
 		public Hand handL;
 		public Hand handR;
 
+		public float curlTolerance; // .6f
 		public float handOffset; //.02f
 		public float minimumConfidence; //.5f
 
@@ -53,15 +54,28 @@ namespace UIHandTest1
 							for (int f = 0; f < fingers.Count; f++)
 							{
 								Finger finger = fingers[f];
-								if (f == 1)
-									Debug.Log (LeapUtil.FingerCurl(finger));
+
+								// get position and rotation of finger ends
 								Vector3 palmNormal = LeapUtil.LeapToWorldRot(hand.PalmNormal, handController);
 								Bone b3 = finger.Bone (Bone.BoneType.TYPE_DISTAL); // get bone 3 (end of finger)
 								Vector3 b3Pos = LeapUtil.LeapToWorldPos(b3.Center, handController);
 								Vector3 bB3Rot = LeapUtil.LeapToWorldRot(b3.Direction, handController);
+								// ofset that position out from the palm normal
 								b3Pos += (palmNormal * handOffset);
-								leftHandUI[f].transform.position = b3Pos;
+
+								// set position and rotation of UI element
+								leftHandUI[f].transform.position = b3Pos; 
 								leftHandUI[f].transform.forward = palmNormal;
+								if(finger.IsExtended == false)
+									Debug.Log ("extended");
+
+								// set the color of the UI element based on curl
+								// not working now because my curl function is f-ed
+//								float curl = LeapUtil.FingerCurl(finger); // get curl of finger
+//								if(f == 1)
+//									Debug.Log (curl);
+//								curl = LeapUtil.Remap(curl, -10f, -40f, 0f, 1f); // remap the value 0-1
+//								leftHandUI[f].SetColor(new Color(0,curl,0,1));
 							}
 						}
 						else 
