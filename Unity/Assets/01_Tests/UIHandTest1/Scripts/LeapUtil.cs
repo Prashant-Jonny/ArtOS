@@ -18,6 +18,17 @@ using Leap;
 			return handController.transform.TransformDirection(unityDirection);
 		}
 
+		public static float DistanceFromPalmNormal(Vector3 position, Hand hand, HandController handController)
+		{
+			Leap.Vector palmNorm = hand.PalmNormal;
+			Vector3 palmNormWorld = LeapUtil.LeapToWorldRot(palmNorm, handController);
+			Leap.Vector palmPos = hand.PalmPosition;
+			Vector3 palmPosWorld = LeapUtil.LeapToWorldPos(palmPos, handController);
+			Debug.DrawRay(palmPosWorld,palmNormWorld, Color.red);
+			Debug.DrawRay(position, palmNormWorld, Color.blue);
+			return 1f;
+		}
+
 		public static float FingerCurl(Finger finger)
 		{
 			//Angle between metacarpal and distal phalange bones

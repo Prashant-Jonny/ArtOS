@@ -66,8 +66,12 @@ namespace UIHandTest1
 								// set position and rotation of UI element
 								leftHandUI[f].transform.position = b3Pos; 
 								leftHandUI[f].transform.forward = palmNormal;
-								if(finger.IsExtended == false)
-									Debug.Log ("extended");
+
+								// calculate distance from palm normal
+								LeapUtil.DistanceFromPalmNormal(leftHandUI[f].transform.position,hand,handController);
+
+//								if(finger.IsExtended == false)
+//									Debug.Log ("pressing " + finger.Type);
 
 								// set the color of the UI element based on curl
 								// not working now because my curl function is f-ed
