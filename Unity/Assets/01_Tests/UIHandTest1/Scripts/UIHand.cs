@@ -35,25 +35,18 @@ namespace UIHandTest1
 
 		void Update ()
 		{
-			for (int i = 0; i < leftHandUI.Length; i++)
-			{
-				if (leftHandUIPress[i] && leftHandUIPressEvent[i])
-				{
-					leftHandUIPressEvent[i] = false;
-					Debug.Log ("press began");
-					// BUTTON PRESS BEGIN EVENT
-					
-				}
 
-				if (!leftHandUIPress[i] && !leftHandUIPressEvent[i])
-				{
-					leftHandUIPressEvent[i] = true;
-					Debug.Log ("press ended");
-					// BUTTON PRESS END EVENT
+		}
 
-				} 
+		// triggered
+		void OnFingerButtonPressBegin (int finger)
+		{
 
-			}
+		}
+
+		void OnFingerButtonPressEnd (int finger)
+		{
+			
 		}
 
 		void LateUpdate () 
@@ -115,7 +108,34 @@ namespace UIHandTest1
 					}
 				}
 			}
+			DetectFingerButtonPressEvents();
 		}
+
+		// UTILITY FUNCTIONS
+		
+		void DetectFingerButtonPressEvents ()
+		{
+			for (int i = 0; i < leftHandUI.Length; i++)
+			{
+				if (leftHandUIPress[i] && leftHandUIPressEvent[i])
+				{
+					leftHandUIPressEvent[i] = false;
+					Debug.Log ("press began");
+					// BUTTON PRESS BEGIN EVENT
+					OnFingerButtonPressBegin(i);
+				}
+				
+				if (!leftHandUIPress[i] && !leftHandUIPressEvent[i])
+				{
+					leftHandUIPressEvent[i] = true;
+					Debug.Log ("press ended");
+					// BUTTON PRESS END EVENT
+					OnFingerButtonPressEnd(i);
+				} 
+				
+			}
+		}
+
 
 		void UIAlphaToggle (bool on)
 		{
