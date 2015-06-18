@@ -53,6 +53,8 @@ namespace UIHandTest1
 							for (int f = 0; f < fingers.Count; f++)
 							{
 								Finger finger = fingers[f];
+								if (f == 1)
+									Debug.Log (LeapUtil.FingerCurl(finger));
 								Vector3 palmNormal = LeapUtil.LeapToWorldRot(hand.PalmNormal, handController);
 								Bone b3 = finger.Bone (Bone.BoneType.TYPE_DISTAL); // get bone 3 (end of finger)
 								Vector3 b3Pos = LeapUtil.LeapToWorldPos(b3.Center, handController);

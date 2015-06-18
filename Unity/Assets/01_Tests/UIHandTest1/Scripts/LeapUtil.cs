@@ -18,6 +18,21 @@ using Leap;
 			return handController.transform.TransformDirection(unityDirection);
 		}
 
+		public static float FingerCurl(Finger finger)
+		{
+			//Angle between metacarpal and distal phalange bones
+			Vector metacarpalDirection = finger.Bone(Bone.BoneType.TYPE_INTERMEDIATE).Basis.zBasis * -1f;
+			Vector distalPhalangeDirection = finger.Bone(Bone.BoneType.TYPE_DISTAL).Basis.zBasis * -1f;
+			float rawangle = metacarpalDirection.AngleTo(distalPhalangeDirection) * 180/Mathf.PI;
+			
+			//Find sign
+			Vector crossBones = metacarpalDirection.Cross(distalPhalangeDirection);
+			Vector boneXBasis = finger.Bone(Bone.BoneType.TYPE_METACARPAL).Basis.xBasis;
+			if(finger.Hand.IsLeft) boneXBasis = boneXBasis * -1f; //Left hand uses a left-hand basis
+			int sign = (crossBones.Dot(boneXBasis) >= 0) ? 1 : -1;
+			return sign * rawangle;  
+		}
+
 //		public static Vector3 ToPositionVector3 (Vector position)
 //		{
 //			return new Vector3(position.x, position.y, -position.z);
