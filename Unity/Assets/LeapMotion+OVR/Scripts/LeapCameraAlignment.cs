@@ -38,6 +38,9 @@ public class LeapCameraAlignment : MonoBehaviour {
     if (device.type == LeapDeviceType.Invalid)
       return;
 
+	if (double.IsInfinity(oculusIPD.magnitude))
+		return;
+
     Vector3 addIPD = 0.5f * oculusIPD.normalized * (device.baseline - oculusIPD.magnitude) * tween;
     Vector3 toDevice = centerEye.forward * device.focalPlaneOffset * tween;
     leftEye.position = leftEye.position - addIPD + toDevice;
