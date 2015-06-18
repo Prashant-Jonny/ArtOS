@@ -45,6 +45,8 @@ namespace UIHandTest1
 						if (hand.Confidence > minimumConfidence)
 						{
 							squareCanvas.SetColor(Color.white);
+							squareCanvas.transform.GetChild(0).GetComponent<CanvasRenderer>().SetAlpha(1);
+
 							FingerList fingers = hand.Fingers;
 							foreach (Finger finger in fingers)
 							{
@@ -64,6 +66,7 @@ namespace UIHandTest1
 						else 
 						{
 							squareCanvas.SetColor(new Color(1,1,1,0));
+							squareCanvas.transform.GetChild(0).GetComponent<CanvasRenderer>().SetAlpha(0);
 						}
 					}
 				}
