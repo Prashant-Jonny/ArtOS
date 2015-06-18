@@ -12,6 +12,8 @@ namespace UIHandTest1
 		public Hand handL;
 		public Hand handR;
 
+		public float handOffset = 10;
+
 		// Use this for initialization
 		void Start ()
 		{
@@ -38,10 +40,13 @@ namespace UIHandTest1
 							if (finger.Type == Finger.FingerType.TYPE_INDEX)
 							{
 								Finger index = finger;
+								Vector3 palmNormal = LeapUtil.LeapToWorldRot(hand.PalmNormal, handController);
 								Bone indexB3 = index.Bone (Bone.BoneType.TYPE_DISTAL); // get the bone
 								Vector3 indexB3Pos = LeapUtil.LeapToWorldPos(indexB3.Center, handController);
 								Vector3 indexB3Rot = LeapUtil.LeapToWorldRot(indexB3.Direction, handController);
-//								square.position = indexB3Pos;
+								square.position = indexB3Pos;
+								indexB3Pos += (palmNormal * handOffset);
+								square.forward = palmNormal;
 								Debug.DrawRay(indexB3Pos,indexB3Rot);
 							}
 						}
