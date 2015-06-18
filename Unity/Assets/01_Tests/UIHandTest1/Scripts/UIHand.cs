@@ -7,7 +7,7 @@ namespace UIHandTest1
 	public class UIHand : MonoBehaviour 
 	{
 		public Transform ui;
-		public Transform square;
+		public CanvasRenderer[] leftHandUI;
 		private CanvasRenderer squareCanvas;
 		public HandController handController = null;
 		public Hand handL;
@@ -21,7 +21,11 @@ namespace UIHandTest1
 
 		void Start ()
 		{
-			squareCanvas = square.GetComponent<CanvasRenderer>();
+//			for (int i = 0; i <= leftHandUI.Length; i++)
+//			{
+//				
+//			}
+//			squareCanvas = square0.GetComponent<CanvasRenderer>();
 		}
 
 		void Update ()
@@ -44,31 +48,42 @@ namespace UIHandTest1
 					{
 						if (hand.Confidence > minimumConfidence)
 						{
-							squareCanvas.SetColor(Color.white);
-							squareCanvas.transform.GetChild(0).GetComponent<CanvasRenderer>().SetAlpha(1);
-
+							UIAlphaToggle(true);
 							FingerList fingers = hand.Fingers;
-							foreach (Finger finger in fingers)
+							for (int f = 0; f < fingers.Count; f++)
 							{
-								if (finger.Type == Finger.FingerType.TYPE_INDEX)
-								{
-									Finger index = finger;
-									Vector3 palmNormal = LeapUtil.LeapToWorldRot(hand.PalmNormal, handController);
-									Bone indexB3 = index.Bone (Bone.BoneType.TYPE_DISTAL); // get the bone
-									Vector3 indexB3Pos = LeapUtil.LeapToWorldPos(indexB3.Center, handController);
-									Vector3 indexB3Rot = LeapUtil.LeapToWorldRot(indexB3.Direction, handController);
-									indexB3Pos += (palmNormal * handOffset);
-									square.position = indexB3Pos;
-									square.forward = palmNormal;
-								}
+								Finger finger = fingers[f];
+								Vector3 palmNormal = LeapUtil.LeapToWorldRot(hand.PalmNormal, handController);
+								Bone b3 = finger.Bone (Bone.BoneType.TYPE_DISTAL); // get bone 3 (end of finger)
+								Vector3 b3Pos = LeapUtil.LeapToWorldPos(b3.Center, handController);
+								Vector3 bB3Rot = LeapUtil.LeapToWorldRot(b3.Direction, handController);
+								b3Pos += (palmNormal * handOffset);
+								leftHandUI[f].transform.position = b3Pos;
+								leftHandUI[f].transform.forward = palmNormal;
 							}
 						}
 						else 
 						{
-							squareCanvas.SetColor(new Color(1,1,1,0));
-							squareCanvas.transform.GetChild(0).GetComponent<CanvasRenderer>().SetAlpha(0);
+							UIAlphaToggle(false);
 						}
 					}
+				}
+			}
+		}
+
+		void UIAlphaToggle (bool on)
+		{
+			for (int i = 0; i < leftHandUI.Length; i++)
+			{
+				if (on)
+				{
+					leftHandUI[i].SetAlpha(1);
+					leftHandUI[i].transform.GetChild(0).GetComponent<CanvasRenderer>().SetAlpha(1);
+				}
+				if (!on)
+				{
+					leftHandUI[i].SetAlpha(0);
+					leftHandUI[i].transform.GetChild(0).GetComponent<CanvasRenderer>().SetAlpha(0);
 				}
 			}
 		}
