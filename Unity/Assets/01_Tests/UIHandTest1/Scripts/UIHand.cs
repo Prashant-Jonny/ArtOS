@@ -8,12 +8,14 @@ namespace UIHandTest1
 	{
 		public Transform ui;
 		public CanvasRenderer[] leftHandUI;
+		public bool[] leftHandUIPress;
+		public bool[] leftHandUIPressEvent;
 		private CanvasRenderer squareCanvas;
 		public HandController handController = null;
 		public Hand handL;
 		public Hand handR;
 
-		public float buttonPressDist; // .005f
+		public float buttonPressDistance; // .004f
 		public float handOffset; //.02f
 		public float minimumConfidence; //.5f
 
@@ -22,16 +24,36 @@ namespace UIHandTest1
 
 		void Start ()
 		{
-//			for (int i = 0; i <= leftHandUI.Length; i++)
-//			{
-//				
-//			}
-//			squareCanvas = square0.GetComponent<CanvasRenderer>();
+			leftHandUIPress = new bool[leftHandUI.Length];
+			leftHandUIPressEvent = new bool[leftHandUI.Length];
+			for (int i = 0; i < leftHandUIPress.Length; i++)
+			{
+				leftHandUIPress[i] = false;
+				leftHandUIPressEvent[i] = false;
+			}
 		}
 
 		void Update ()
 		{
+			for (int i = 0; i < leftHandUI.Length; i++)
+			{
+				if (leftHandUIPress[i] && leftHandUIPressEvent[i])
+				{
+					leftHandUIPressEvent[i] = false;
+					Debug.Log ("press began");
+					// BUTTON PRESS BEGIN EVENT
+					
+				}
 
+				if (!leftHandUIPress[i] && !leftHandUIPressEvent[i])
+				{
+					leftHandUIPressEvent[i] = true;
+					Debug.Log ("press ended");
+					// BUTTON PRESS END EVENT
+
+				} 
+
+			}
 		}
 
 		void LateUpdate () 
@@ -67,12 +89,15 @@ namespace UIHandTest1
 								leftHandUI[f].transform.position = b3PosWorld; 
 								leftHandUI[f].transform.forward = palmNormalWorld;
 
-								// calculate distance from palm normal
-								if (f==1)
-									Debug.Log (LeapUtil.DistanceFromPalmNormal(b3PosWorld,hand,handController));
-
-//								if(finger.IsExtended == false)
-//									Debug.Log ("pressing " + finger.Type);
+								// calculate distance to palm
+								float distanceFromPalmNormal = LeapUtil.DistanceFromPalmNormal(b3PosWorld,hand,handController);
+								// check if distance is over max
+								if (distanceFromPalmNormal > buttonPressDistance)
+								{
+									leftHandUIPress[f] = true;
+								} else {
+									leftHandUIPress[f] = false;
+								}
 
 								// set the color of the UI element based on curl
 								// not working now because my curl function is f-ed
