@@ -13,7 +13,7 @@ namespace UIHandTest1
 		public Hand handL;
 		public Hand handR;
 
-		public float curlTolerance; // .6f
+		public float buttonPressDist; // .005f
 		public float handOffset; //.02f
 		public float minimumConfidence; //.5f
 
@@ -56,19 +56,20 @@ namespace UIHandTest1
 								Finger finger = fingers[f];
 
 								// get position and rotation of finger ends
-								Vector3 palmNormal = LeapUtil.LeapToWorldRot(hand.PalmNormal, handController);
+								Vector3 palmNormalWorld = LeapUtil.LeapToWorldRot(hand.PalmNormal, handController);
 								Bone b3 = finger.Bone (Bone.BoneType.TYPE_DISTAL); // get bone 3 (end of finger)
-								Vector3 b3Pos = LeapUtil.LeapToWorldPos(b3.Center, handController);
-								Vector3 bB3Rot = LeapUtil.LeapToWorldRot(b3.Direction, handController);
+								Vector3 b3PosWorld = LeapUtil.LeapToWorldPos(b3.Center, handController);
+								Vector3 bB3RotWorld = LeapUtil.LeapToWorldRot(b3.Direction, handController);
 								// ofset that position out from the palm normal
-								b3Pos += (palmNormal * handOffset);
+								b3PosWorld += (palmNormalWorld * handOffset);
 
 								// set position and rotation of UI element
-								leftHandUI[f].transform.position = b3Pos; 
-								leftHandUI[f].transform.forward = palmNormal;
+								leftHandUI[f].transform.position = b3PosWorld; 
+								leftHandUI[f].transform.forward = palmNormalWorld;
 
 								// calculate distance from palm normal
-								LeapUtil.DistanceFromPalmNormal(leftHandUI[f].transform.position,hand,handController);
+								if (f==1)
+									Debug.Log (LeapUtil.DistanceFromPalmNormal(b3PosWorld,hand,handController));
 
 //								if(finger.IsExtended == false)
 //									Debug.Log ("pressing " + finger.Type);

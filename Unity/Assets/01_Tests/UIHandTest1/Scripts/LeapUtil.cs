@@ -20,13 +20,23 @@ using Leap;
 
 		public static float DistanceFromPalmNormal(Vector3 position, Hand hand, HandController handController)
 		{
+			// get palm position and normal
 			Leap.Vector palmNorm = hand.PalmNormal;
 			Vector3 palmNormWorld = LeapUtil.LeapToWorldRot(palmNorm, handController);
 			Leap.Vector palmPos = hand.PalmPosition;
 			Vector3 palmPosWorld = LeapUtil.LeapToWorldPos(palmPos, handController);
-			Debug.DrawRay(palmPosWorld,palmNormWorld, Color.red);
-			Debug.DrawRay(position, palmNormWorld, Color.blue);
-			return 1f;
+
+			// project to figure out the distance along the normal
+			Vector3 vector = position - palmPosWorld;
+			Vector3 projection = Vector3.Project(vector, palmNormWorld);
+			float distance = projection.sqrMagnitude;
+
+			// debug lines
+//			Debug.DrawRay(palmPosWorld,palmNormWorld, Color.red);
+//			Debug.DrawRay(position, palmNormWorld, Color.blue);
+//			Debug.DrawLine(palmPosWorld,palmPosWorld + projection);
+
+			return distance;
 		}
 
 		public static float FingerCurl(Finger finger)
