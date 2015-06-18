@@ -8,19 +8,27 @@ namespace UIHandTest1
 	{
 		public Transform ui;
 		public Transform square;
+		private CanvasRenderer squareCanvas;
 		public HandController handController = null;
 		public Hand handL;
 		public Hand handR;
 
 		public float handOffset; //.02f
+		public float minimumConfidence; //.5f
 
-		// Use this for initialization
+//		public bool handLEnter;
+//		public bool handLExit;
+
 		void Start ()
+		{
+			squareCanvas = square.GetComponent<CanvasRenderer>();
+		}
+
+		void Update ()
 		{
 
 		}
 
-		// Update is called once per frame
 		void LateUpdate () 
 		{
 			if (handController == null)
@@ -34,27 +42,32 @@ namespace UIHandTest1
 					Hand hand = hands[i].GetLeapHand(); // convert to leap hand
 					if (hand.IsLeft)
 					{
-						FingerList fingers = hand.Fingers;
-						foreach (Finger finger in fingers)
+						if (hand.Confidence > minimumConfidence)
 						{
-							if (finger.Type == Finger.FingerType.TYPE_INDEX)
+							squareCanvas.SetColor(Color.white);
+							FingerList fingers = hand.Fingers;
+							foreach (Finger finger in fingers)
 							{
-								Finger index = finger;
-								Vector3 palmNormal = LeapUtil.LeapToWorldRot(hand.PalmNormal, handController);
-								Bone indexB3 = index.Bone (Bone.BoneType.TYPE_DISTAL); // get the bone
-								Vector3 indexB3Pos = LeapUtil.LeapToWorldPos(indexB3.Center, handController);
-								Vector3 indexB3Rot = LeapUtil.LeapToWorldRot(indexB3.Direction, handController);
-								indexB3Pos += (palmNormal * handOffset);
-								square.position = indexB3Pos;
-								square.forward = palmNormal;
-								Debug.DrawRay(indexB3Pos,indexB3Rot);
+								if (finger.Type == Finger.FingerType.TYPE_INDEX)
+								{
+									Finger index = finger;
+									Vector3 palmNormal = LeapUtil.LeapToWorldRot(hand.PalmNormal, handController);
+									Bone indexB3 = index.Bone (Bone.BoneType.TYPE_DISTAL); // get the bone
+									Vector3 indexB3Pos = LeapUtil.LeapToWorldPos(indexB3.Center, handController);
+									Vector3 indexB3Rot = LeapUtil.LeapToWorldRot(indexB3.Direction, handController);
+									indexB3Pos += (palmNormal * handOffset);
+									square.position = indexB3Pos;
+									square.forward = palmNormal;
+								}
 							}
+						}
+						else 
+						{
+							squareCanvas.SetColor(new Color(1,1,1,0));
 						}
 					}
 				}
 			}
-
-//			Debug.DrawRay(finger0Pos,Vector3.up,Color.red);
 		}
 	}
 }
