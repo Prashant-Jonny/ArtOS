@@ -20,7 +20,7 @@ namespace UIHandTest1
 
 		public void FingerButtonPressBegin(int finger)
 		{
-			print ("press begin message received " + finger);
+//			print ("press begin message received " + finger);
 
 			// temp hacky dipes
 			if (finger == 1)
@@ -35,7 +35,7 @@ namespace UIHandTest1
 
 		public void FingerButtonPressEnd(int finger)
 		{
-			print ("press end message received " + finger);
+//			print ("press end message received " + finger);
 
 		}
 
