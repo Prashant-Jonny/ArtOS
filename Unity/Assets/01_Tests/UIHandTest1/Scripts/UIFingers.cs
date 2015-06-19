@@ -20,8 +20,6 @@ namespace UIHandTest1
 		public float buttonPressDistance; // .005f
 		public float buttonPressDistancePinky; // .003f 
 		public float handOffset; //.02f
-		public float minimumConfidence; //.5f
-		public float minimumDotFaceCamera; // 0f
 
 		void Start ()
 		{
@@ -76,9 +74,9 @@ namespace UIHandTest1
 			if (hand != null)
 			{
 				// if hand is tracking well and palm is facing away from camera
-				if (hand.Confidence > minimumConfidence 
+				if (hand.Confidence > uiHand.minimumConfidence 
 //				    && hand.IsValid
-				    && LeapUtil.CheckPalmFacingCamera(hand, uiHand.handController, uiHand.cameraTransform, minimumDotFaceCamera))
+				    && LeapUtil.CheckPalmFacingCamera(hand, uiHand.handController, uiHand.cameraTransform, uiHand.minimumDotFaceCamera))
 				{
 					UIAlphaToggle(true); // unhide UI
 					FingerList fingers = hand.Fingers;
@@ -90,7 +88,7 @@ namespace UIHandTest1
 						for (int g=0; g < 1; g++) // this is just for our thumb logic check to break out of
 						{
 
-							if (!useThumb && f == 0) // if useThumb is false and it's a finger that's not the thumb
+							if (!useThumb && f == 0) // if useThumb is false and it's the thumb
 							{
 								break;
 							}
@@ -170,6 +168,11 @@ namespace UIHandTest1
 					uiCanvases[i].SetAlpha(0);
 					uiCanvases[i].transform.GetChild(0).GetComponent<CanvasRenderer>().SetAlpha(0);
 				}
+			}
+			if (!useThumb)
+			{
+				uiCanvases[0].SetAlpha(0);
+				uiCanvases[0].transform.GetChild(0).GetComponent<CanvasRenderer>().SetAlpha(0);
 			}
 		}
 	}
