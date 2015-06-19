@@ -3,9 +3,13 @@ using System.Collections;
 using Leap;
 
 //namespace Leap { // need the leap namespace for leap specific callbacks
+namespace UIHandTest1 
+{
 	public class LeapUtil
 	{
 
+		public enum WhichHand {Left, Right}
+	
 		public static Vector3 LeapToWorldPos(Leap.Vector position, HandController handController)
 		{
 			Vector3 unityPosition = position.ToUnityScaled(false);
@@ -70,6 +74,33 @@ using Leap;
 			else
 				return false;
 		}
-	
+		
+		public static Hand UpdateHand(WhichHand whichHand, UIHand uiHand)
+		{
+			HandModel[] hands = uiHand.handController.GetAllGraphicsHands();
+			if (hands.Length > 0)
+			{
+				for(int i=0; i < hands.Length; i++) // go through all hands in scene
+				{
+					Hand currentHand = hands[i].GetLeapHand(); // convert to leap hand
+					if (whichHand == WhichHand.Left)
+					{
+						if (currentHand.IsLeft) 
+							return currentHand;
+						else 
+							return null;
+					}
+					if (whichHand == WhichHand.Right)
+					{
+						if (currentHand.IsRight) 
+							return currentHand;
+						else
+							return null;
+					}
+				}
+			}
+			return null;
+		}
+	}
 }
 //}

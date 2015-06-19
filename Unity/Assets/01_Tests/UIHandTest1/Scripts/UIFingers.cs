@@ -10,8 +10,7 @@ namespace UIHandTest1
 	{
 		private UIHand uiHand; // the parent UIHand component
 
-		public enum WhichHand {Left, Right}
-		WhichHand whichHand;
+		public LeapUtil.WhichHand whichHand;
 		public CanvasRenderer[] leftHandUI;
 		public bool[] leftHandUIPress;
 		public bool[] leftHandUIPressEvent;
@@ -59,26 +58,7 @@ namespace UIHandTest1
 		void LateUpdate () 
 		{
 			
-			HandModel[] hands = uiHand.handController.GetAllGraphicsHands();
-			if (hands.Length > 0)
-			{
-				for(int i=0; i < hands.Length; i++) // go through all hands in scene
-				{
-					Hand currentHand = hands[i].GetLeapHand(); // convert to leap hand
-					if (whichHand == WhichHand.Left)
-					{
-						if (currentHand.IsLeft) 
-							hand = currentHand;
-						else 
-							hand = null;
-					}
-					if (whichHand == WhichHand.Right)
-					{
-						if (currentHand.IsRight) 
-							hand = currentHand;
-					}
-				}
-			}
+			hand = LeapUtil.UpdateHand(whichHand, uiHand);
 						
 			// if hand is present
 			if (hand != null)
