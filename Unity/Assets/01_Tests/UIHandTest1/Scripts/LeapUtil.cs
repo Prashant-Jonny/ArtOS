@@ -3,7 +3,7 @@ using System.Collections;
 using Leap;
 
 //namespace Leap { // need the leap namespace for leap specific callbacks
-namespace UIHandTest1 
+namespace UIHandTest1
 {
 	public class LeapUtil
 	{
@@ -74,8 +74,36 @@ namespace UIHandTest1
 			else
 				return false;
 		}
-		
-		public static Hand UpdateHand(WhichHand whichHand, UIHand uiHand)
+
+		public static Hand GetLeftHand(UIHand uiHand)
+		{
+//			Frame frame = uiHand.handController.GetFrame();
+//			Hand hand = frame.Hands.Leftmost;
+//			return hand;
+//			if (hand.IsValid && hand.IsLeft)
+//				return hand;
+//			else 
+//				return null;
+
+			HandModel[] hands = uiHand.handController.GetAllGraphicsHands();
+			if (hands.Length > 0)
+			{
+				for(int i=0; i < hands.Length; i++) // go through all hands in scene
+				{
+					Hand currentHand = hands[i].GetLeapHand(); // convert to leap hand
+					if (currentHand.IsLeft) 
+					{
+						return currentHand;
+					}
+					else 
+						return null;
+				}
+				return null;
+			}
+			return null;
+		}
+
+		public static Hand GetRightHand(UIHand uiHand)
 		{
 			HandModel[] hands = uiHand.handController.GetAllGraphicsHands();
 			if (hands.Length > 0)
@@ -83,16 +111,49 @@ namespace UIHandTest1
 				for(int i=0; i < hands.Length; i++) // go through all hands in scene
 				{
 					Hand currentHand = hands[i].GetLeapHand(); // convert to leap hand
-					if (whichHand == WhichHand.Left)
+					if (currentHand.IsRight) 
 					{
-						if (currentHand.IsLeft) 
+						return currentHand;
+					}
+					else 
+						return null;
+				}
+				return null;
+			}
+			return null;
+		}
+
+		
+		public static Hand GetHand(WhichHand whichHand, UIHand uiHand)
+		{
+
+
+//
+//			Frame frame = uiHand.handController.GetFrame();
+//			if (whichHand == WhichHand.Left)
+//				return frame.Hands.Leftmost;
+//			if (whichHand == WhichHand.Right)
+//				return frame.Hands.Rightmost;
+//			return null;
+
+
+
+			HandModel[] hands = uiHand.handController.GetAllGraphicsHands();
+			if (hands.Length > 0)
+			{
+				for(int i=0; i < hands.Length; i++) // go through all hands in scene
+				{
+					Hand currentHand = hands[i].GetLeapHand(); // convert to leap hand
+					if (currentHand.IsLeft) 
+					{
+						if (whichHand == WhichHand.Left)
 							return currentHand;
 						else 
 							return null;
 					}
-					if (whichHand == WhichHand.Right)
+					if (currentHand.IsRight) 
 					{
-						if (currentHand.IsRight) 
+						if (whichHand == WhichHand.Right)
 							return currentHand;
 						else
 							return null;

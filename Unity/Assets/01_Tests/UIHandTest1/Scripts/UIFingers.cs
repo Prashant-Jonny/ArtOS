@@ -57,9 +57,11 @@ namespace UIHandTest1
 
 		void LateUpdate () 
 		{
-			
-			hand = LeapUtil.UpdateHand(whichHand, uiHand);
-						
+			if (whichHand == LeapUtil.WhichHand.Left)
+				hand = LeapUtil.GetLeftHand(uiHand);
+			if (whichHand == LeapUtil.WhichHand.Right)
+				hand = LeapUtil.GetRightHand(uiHand);
+			Debug.Log (hand);
 			// if hand is present
 			if (hand != null)
 			{
