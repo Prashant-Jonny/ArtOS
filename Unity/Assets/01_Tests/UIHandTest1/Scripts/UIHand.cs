@@ -12,8 +12,7 @@ namespace UIHandTest1
 		public CanvasRenderer[] leftHandUI;
 		public bool[] leftHandUIPress;
 		public bool[] leftHandUIPressEvent;
-		private CanvasRenderer squareCanvas;
-		public HandController handController = null;
+		public HandController handController;
 		public Hand handL;
 		public Hand handR;
 
