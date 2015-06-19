@@ -11,6 +11,7 @@ namespace UIHandTest1
 		private UIHand uiHand; // the parent UIHand component
 
 		public LeapUtil.WhichHand whichHand;
+		public bool useThumb;
 		public CanvasRenderer[] uiCanvases;
 		private bool[] Press;
 		private bool[] PressEvent;
@@ -85,31 +86,37 @@ namespace UIHandTest1
 					{
 						Finger finger = fingers[f];
 
-						// ALIGN UI TO FINGERS
-						// get position and rotation of finger ends
-						Vector3 palmNormalWorld = LeapUtil.LeapToWorldRot(hand.PalmNormal, uiHand.handController);
-						Bone b3 = finger.Bone (Bone.BoneType.TYPE_DISTAL); // get bone 3 (end of finger)
-						Vector3 b3PosWorld = LeapUtil.LeapToWorldPos(b3.Center, uiHand.handController);
-						Vector3 bB3RotWorld = LeapUtil.LeapToWorldRot(b3.Direction, uiHand.handController);
-						// ofset that position out from the palm normal
-						b3PosWorld += (palmNormalWorld * handOffset);
-
-						// set position and rotation of UI element
-						uiCanvases[f].transform.position = b3PosWorld; 
-						uiCanvases[f].transform.forward = palmNormalWorld;
-
-						// CHECK IF PRESSING
-						// calculate distance to palm
-						float distanceFromPalmNormal = LeapUtil.DistanceFromPalmNormal(b3PosWorld,hand,uiHand.handController);
-						// check if distance is over max
-						float distance = buttonPressDistance;
-						if (f == 4) // if pinky
-							distance = buttonPressDistancePinky; // set to pinky distance
-						if (distanceFromPalmNormal > distance)
+						// if not thumb
+						if (!useThumb && finger.Type != Finger.FingerType.TYPE_THUMB) 
 						{
-							Press[f] = true;
-						} else {
-							Press[f] = false;
+					
+							// ALIGN UI TO FINGERS
+							// get position and rotation of finger ends
+							Vector3 palmNormalWorld = LeapUtil.LeapToWorldRot(hand.PalmNormal, uiHand.handController);
+							Bone b3 = finger.Bone (Bone.BoneType.TYPE_DISTAL); // get bone 3 (end of finger)
+							Vector3 b3PosWorld = LeapUtil.LeapToWorldPos(b3.Center, uiHand.handController);
+							Vector3 bB3RotWorld = LeapUtil.LeapToWorldRot(b3.Direction, uiHand.handController);
+							// ofset that position out from the palm normal
+							b3PosWorld += (palmNormalWorld * handOffset);
+
+							// set position and rotation of UI element
+							uiCanvases[f].transform.position = b3PosWorld; 
+							uiCanvases[f].transform.forward = palmNormalWorld;
+
+
+							// CHECK IF PRESSING
+							// calculate distance to palm
+							float distanceFromPalmNormal = LeapUtil.DistanceFromPalmNormal(b3PosWorld,hand,uiHand.handController);
+							// check if distance is over max
+							float distance = buttonPressDistance;
+							if (f == 4) // if pinky
+								distance = buttonPressDistancePinky; // set to pinky distance
+							if (distanceFromPalmNormal > distance)
+							{
+								Press[f] = true;
+							} else {
+								Press[f] = false;
+							}
 						}
 					}
 				}
