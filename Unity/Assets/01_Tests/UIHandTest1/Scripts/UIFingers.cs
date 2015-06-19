@@ -11,9 +11,9 @@ namespace UIHandTest1
 		private UIHand uiHand; // the parent UIHand component
 
 		public LeapUtil.WhichHand whichHand;
-		public CanvasRenderer[] leftHandUI;
-		public bool[] leftHandUIPress;
-		public bool[] leftHandUIPressEvent;
+		public CanvasRenderer[] uiCanvases;
+		public bool[] Press;
+		public bool[] PressEvent;
 		private Hand hand;
 
 		public float buttonPressDistance; // .005f
@@ -25,13 +25,13 @@ namespace UIHandTest1
 		void Start ()
 		{
 			uiHand = GetComponent<UIHand>();
-			leftHandUIPress = new bool[leftHandUI.Length];
-			leftHandUIPressEvent = new bool[leftHandUI.Length];
+			Press = new bool[uiCanvases.Length];
+			PressEvent = new bool[uiCanvases.Length];
 			// set all bool arrays to false
-			for (int i = 0; i < leftHandUIPress.Length; i++)
+			for (int i = 0; i < Press.Length; i++)
 			{
-				leftHandUIPress[i] = false;
-				leftHandUIPressEvent[i] = false;
+				Press[i] = false;
+				PressEvent[i] = false;
 			}
 		}
 
@@ -44,7 +44,7 @@ namespace UIHandTest1
 		private void OnFingerButtonPressBegin (int finger)
 		{
 //			Debug.Log ("press begin finger " + finger);
-			Button button = leftHandUI[finger].transform.GetComponent<Button>();
+			Button button = uiCanvases[finger].transform.GetComponent<Button>();
 			if (button != null)
 				button.onClick.Invoke();
 				
@@ -82,8 +82,8 @@ namespace UIHandTest1
 						b3PosWorld += (palmNormalWorld * handOffset);
 
 						// set position and rotation of UI element
-						leftHandUI[f].transform.position = b3PosWorld; 
-						leftHandUI[f].transform.forward = palmNormalWorld;
+						uiCanvases[f].transform.position = b3PosWorld; 
+						uiCanvases[f].transform.forward = palmNormalWorld;
 
 						// calculate distance to palm
 						float distanceFromPalmNormal = LeapUtil.DistanceFromPalmNormal(b3PosWorld,hand,uiHand.handController);
@@ -93,9 +93,9 @@ namespace UIHandTest1
 							distance = buttonPressDistancePinky; // set to pinky distance
 						if (distanceFromPalmNormal > distance)
 						{
-							leftHandUIPress[f] = true;
+							Press[f] = true;
 						} else {
-							leftHandUIPress[f] = false;
+							Press[f] = false;
 						}
 					}
 				}
@@ -111,18 +111,18 @@ namespace UIHandTest1
 		
 		private void DetectFingerButtonPressEvents ()
 		{
-			for (int i = 0; i < leftHandUI.Length; i++)
+			for (int i = 0; i < uiCanvases.Length; i++)
 			{
-				if (leftHandUIPress[i] && leftHandUIPressEvent[i])
+				if (Press[i] && PressEvent[i])
 				{
-					leftHandUIPressEvent[i] = false;
+					PressEvent[i] = false;
 					// BUTTON PRESS BEGIN EVENT
 					OnFingerButtonPressBegin(i);
 				}
 				
-				if (!leftHandUIPress[i] && !leftHandUIPressEvent[i])
+				if (!Press[i] && !PressEvent[i])
 				{
-					leftHandUIPressEvent[i] = true;
+					PressEvent[i] = true;
 					// BUTTON PRESS END EVENT
 					OnFingerButtonPressEnd(i);
 				} 
@@ -132,17 +132,17 @@ namespace UIHandTest1
 
 		private void UIAlphaToggle (bool on)
 		{
-			for (int i = 0; i < leftHandUI.Length; i++)
+			for (int i = 0; i < uiCanvases.Length; i++)
 			{
 				if (on)
 				{
-					leftHandUI[i].SetAlpha(1);
-					leftHandUI[i].transform.GetChild(0).GetComponent<CanvasRenderer>().SetAlpha(1);
+					uiCanvases[i].SetAlpha(1);
+					uiCanvases[i].transform.GetChild(0).GetComponent<CanvasRenderer>().SetAlpha(1);
 				}
 				if (!on)
 				{
-					leftHandUI[i].SetAlpha(0);
-					leftHandUI[i].transform.GetChild(0).GetComponent<CanvasRenderer>().SetAlpha(0);
+					uiCanvases[i].SetAlpha(0);
+					uiCanvases[i].transform.GetChild(0).GetComponent<CanvasRenderer>().SetAlpha(0);
 				}
 			}
 		}
