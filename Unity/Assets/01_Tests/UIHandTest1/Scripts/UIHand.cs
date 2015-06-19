@@ -94,7 +94,10 @@ namespace UIHandTest1
 								// calculate distance to palm
 								float distanceFromPalmNormal = LeapUtil.DistanceFromPalmNormal(b3PosWorld,hand,handController);
 								// check if distance is over max
-								if (distanceFromPalmNormal > buttonPressDistance)
+								float distance = buttonPressDistance;
+								if (f == 4) // if pinky
+									distance = buttonPressDistancePinky; // set to pinky distance
+								if (distanceFromPalmNormal > distance)
 								{
 									leftHandUIPress[f] = true;
 								} else {
@@ -144,8 +147,6 @@ namespace UIHandTest1
 				
 			}
 		}
-
-
 
 		private void UIAlphaToggle (bool on)
 		{
