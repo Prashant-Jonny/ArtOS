@@ -59,6 +59,17 @@ using Leap;
 		{
 			return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
 		}
+
 	
-	}
+		public static bool CheckPalmFacingCamera (Hand hand, HandController handController, Transform cam, float minimumDotFaceCamera)
+		{
+			Vector3 palmNormal = LeapUtil.LeapToWorldRot(hand.PalmNormal, handController);
+			float palmCamDot = Vector3.Dot (palmNormal, cam.forward);
+			if (palmCamDot < minimumDotFaceCamera)
+				return true;
+			else
+				return false;
+		}
+	
+}
 //}

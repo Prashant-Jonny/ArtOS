@@ -18,6 +18,7 @@ namespace UIHandTest1
 		public Hand handR;
 
 		public float buttonPressDistance; // .005f
+		public float buttonPressDistancePinky; // .003f 
 		public float handOffset; //.02f
 		public float minimumConfidence; //.5f
 		public float minimumDotFaceCamera; // 0f
@@ -42,29 +43,16 @@ namespace UIHandTest1
 		// triggered
 		private void OnFingerButtonPressBegin (int finger)
 		{
-			Debug.Log ("press begin finger " + finger);
+//			Debug.Log ("press begin finger " + finger);
 
-			if (finger == 1)
-			{
-				Button button = leftHandUI[1].transform.GetComponent<Button>();
-				button.onClick.Invoke();
-			}
+			Button button = leftHandUI[finger].transform.GetComponent<Button>();
+			button.onClick.Invoke();
 				
 		}
 
 		private void OnFingerButtonPressEnd (int finger)
 		{
-			Debug.Log ("press end finger " + finger);
-		}
-
-		private bool CheckPalmFacingCamera (Hand hand, Transform cam)
-		{
-			Vector3 palmNormal = LeapUtil.LeapToWorldRot(hand.PalmNormal, handController);
-			float palmCamDot = Vector3.Dot (palmNormal, cam.forward);
-			if (palmCamDot < minimumDotFaceCamera)
-				return true;
-			else
-				return false;
+//			Debug.Log ("press end finger " + finger);
 		}
 
 		void LateUpdate () 
@@ -82,7 +70,8 @@ namespace UIHandTest1
 					{
 						handL = hand;
 						// if hand is tracking well and palm is facing away from camera
-						if (hand.Confidence > minimumConfidence  && CheckPalmFacingCamera(hand, cameraTransform))
+						if (hand.Confidence > minimumConfidence  
+						    && LeapUtil.CheckPalmFacingCamera(hand, handController, cameraTransform, minimumDotFaceCamera))
 						{
 							UIAlphaToggle(true); // unhide UI
 							FingerList fingers = hand.Fingers;
@@ -155,6 +144,7 @@ namespace UIHandTest1
 				
 			}
 		}
+
 
 
 		private void UIAlphaToggle (bool on)
