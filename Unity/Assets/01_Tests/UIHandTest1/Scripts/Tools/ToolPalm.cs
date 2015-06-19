@@ -31,6 +31,16 @@ namespace UIHandTest1
 
 				GameObject.Instantiate(Resources.Load ("Cube"), palmPosWorld, palmRotWorldQuat);
 			}
+			if (finger == 2)
+			{
+				print ("select tool");
+				SelectTool ();
+			}
+		}
+
+		public void SelectTool()
+		{
+			
 		}
 
 		public void FingerButtonPressEnd(int finger)
