@@ -21,6 +21,8 @@ namespace UIHandTest1
 		public void FingerButtonPressBegin(int finger)
 		{
 			print ("press begin message received " + finger);
+
+			// temp hacky dipes
 			if (finger == 1)
 			{
 				Vector3 palmPosWorld = LeapUtil.LeapToWorldPos(hand.PalmPosition,toolControl.handController);
