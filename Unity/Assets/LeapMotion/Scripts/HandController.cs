@@ -95,6 +95,11 @@ public class HandController : MonoBehaviour {
     Gizmos.DrawIcon(transform.position, "leap_motion.png");
   }
 
+	public HandModel GetHandModelForLeapId(int leapId)
+	{
+		return hand_physics_[leapId];
+	}
+
   /** 
   * Initializes the Leap Motion policy flags.
   * The POLICY_OPTIMIZE_HMD flag improves tracking for head-mounted devices.
