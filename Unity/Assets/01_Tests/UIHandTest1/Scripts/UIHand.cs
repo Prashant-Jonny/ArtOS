@@ -43,12 +43,12 @@ namespace UIHandTest1
 		// triggered
 		private void OnFingerButtonPressBegin (int finger)
 		{
-
+			Debug.Log ("press begin finger " + finger);
 		}
 
 		private void OnFingerButtonPressEnd (int finger)
 		{
-			
+			Debug.Log ("press end finger " + finger);
 		}
 
 		private bool CheckPalmFacingCamera (Hand hand, Transform cam)
@@ -74,9 +74,10 @@ namespace UIHandTest1
 					Hand hand = hands[i].GetLeapHand(); // convert to leap hand
 					if (hand.IsLeft)
 					{
+						// if hand is tracking well and palm is facing away from camera
 						if (hand.Confidence > minimumConfidence  && CheckPalmFacingCamera(hand, cameraTransform))
 						{
-							UIAlphaToggle(true);
+							UIAlphaToggle(true); // unhide UI
 							FingerList fingers = hand.Fingers;
 							for (int f = 0; f < fingers.Count; f++)
 							{
@@ -115,7 +116,7 @@ namespace UIHandTest1
 						}
 						else 
 						{
-							UIAlphaToggle(false);
+							UIAlphaToggle(false); // hide UI
 						}
 					}
 				}
