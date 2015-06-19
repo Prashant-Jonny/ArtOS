@@ -57,7 +57,7 @@ namespace UIHandTest1
 
 		void LateUpdate () 
 		{
-			// Get Hand
+			// GET LEFT OR RIGHT HAND
 			HandModel[] hands = uiHand.handController.GetAllGraphicsHands();
 			if (hands.Length > 0)
 			{
