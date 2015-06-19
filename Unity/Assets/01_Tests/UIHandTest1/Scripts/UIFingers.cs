@@ -47,7 +47,7 @@ namespace UIHandTest1
 		{
 			// TEST
 //			Debug.Log ("sent message");
-			ExecuteEvents.Execute<UICustomMessageTargetInterface>(target,null,(x,y)=>x.Message1());
+			ExecuteEvents.Execute<UIMessageTargetIF>( target, null, (x,y)=>x.Message1() );
 			// TEST
 
 //			Debug.Log ("press begin finger " + finger);

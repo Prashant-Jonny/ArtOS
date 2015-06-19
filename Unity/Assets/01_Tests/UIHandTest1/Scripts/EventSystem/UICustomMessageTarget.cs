@@ -2,14 +2,14 @@
 using UnityEngine.EventSystems;
 using System.Collections;
 
-public interface UICustomMessageTargetInterface : IEventSystemHandler
+public interface UIMessageTargetIF : IEventSystemHandler
 {
 	// functions that can be called via the messaging system
 	void Message1();
 	void Message2();
 }
 
-public class UICustomMessageTarget : MonoBehaviour, UICustomMessageTargetInterface
+public class UIExampleMessageTarget : MonoBehaviour, UIMessageTargetIF
 {
 	public void Message1()
 	{
