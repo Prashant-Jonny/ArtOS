@@ -12,8 +12,8 @@ namespace UIHandTest1
 
 		public LeapUtil.WhichHand whichHand;
 		public CanvasRenderer[] uiCanvases;
-		public bool[] Press;
-		public bool[] PressEvent;
+		private bool[] Press;
+		private bool[] PressEvent;
 		private Hand hand;
 
 		public float buttonPressDistance; // .005f
