@@ -44,9 +44,9 @@ namespace UIHandTest1
 		private void OnFingerButtonPressBegin (int finger)
 		{
 //			Debug.Log ("press begin finger " + finger);
-
 			Button button = leftHandUI[finger].transform.GetComponent<Button>();
-			button.onClick.Invoke();
+			if (button != null)
+				button.onClick.Invoke();
 				
 		}
 
