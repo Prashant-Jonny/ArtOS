@@ -45,10 +45,8 @@ namespace UIHandTest1
 		// triggered
 		private void OnFingerButtonPressBegin (int finger)
 		{
-			// TEST
-//			Debug.Log ("sent message");
-			ExecuteEvents.Execute<UIMessageTargetIF>( target, null, (x,y)=>x.Message1() );
-			// TEST
+			// send press begin message to other hand
+			ExecuteEvents.Execute<UIMessageTargetIF>( target, null, (x,y)=>x.FingerButtonPressBegin() );
 
 //			Debug.Log ("press begin finger " + finger);
 			Button button = uiCanvases[finger].transform.GetComponent<Button>();
@@ -59,6 +57,9 @@ namespace UIHandTest1
 
 		private void OnFingerButtonPressEnd (int finger)
 		{
+			// send press end message to other hand
+			ExecuteEvents.Execute<UIMessageTargetIF>( target, null, (x,y)=>x.FingerButtonPressEnd() );
+
 //			Debug.Log ("press end finger " + finger);
 		}
 
