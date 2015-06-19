@@ -87,10 +87,15 @@ namespace UIHandTest1
 						Finger finger = fingers[f];
 
 						// if not thumb
-						if (!useThumb && finger.Type != Finger.FingerType.TYPE_THUMB) 
+						for (int g=0; g < 1; g++) // this is just for our thumb logic check to break out of
 						{
+
+							if (!useThumb && f == 0) // if useThumb is false and it's a finger that's not the thumb
+							{
+								break;
+							}
 					
-							// ALIGN UI TO FINGERS
+							// ALIGN UI TO FINGER
 							// get position and rotation of finger ends
 							Vector3 palmNormalWorld = LeapUtil.LeapToWorldRot(hand.PalmNormal, uiHand.handController);
 							Bone b3 = finger.Bone (Bone.BoneType.TYPE_DISTAL); // get bone 3 (end of finger)
