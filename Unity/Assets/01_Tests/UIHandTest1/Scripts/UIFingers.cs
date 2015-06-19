@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using System.Collections;
 using Leap;
 using UnityEngine.UI;
@@ -21,6 +22,8 @@ namespace UIHandTest1
 		public float buttonPressDistancePinky; // .003f 
 		public float handOffset; //.02f
 
+		public GameObject target;
+
 		void Start ()
 		{
 			uiHand = GetComponent<UIHand>();
@@ -42,6 +45,11 @@ namespace UIHandTest1
 		// triggered
 		private void OnFingerButtonPressBegin (int finger)
 		{
+			// TEST
+//			Debug.Log ("sent message");
+			ExecuteEvents.Execute<UICustomMessageTargetInterface>(target,null,(x,y)=>x.Message1());
+			// TEST
+
 //			Debug.Log ("press begin finger " + finger);
 			Button button = uiCanvases[finger].transform.GetComponent<Button>();
 			if (button != null)
