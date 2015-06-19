@@ -103,14 +103,6 @@ namespace UIHandTest1
 								} else {
 									leftHandUIPress[f] = false;
 								}
-
-								// set the color of the UI element based on curl
-								// not working now because my curl function is f-ed
-//								float curl = LeapUtil.FingerCurl(finger); // get curl of finger
-//								if(f == 1)
-//									Debug.Log (curl);
-//								curl = LeapUtil.Remap(curl, -10f, -40f, 0f, 1f); // remap the value 0-1
-//								leftHandUI[f].SetColor(new Color(0,curl,0,1));
 							}
 						}
 						else 
