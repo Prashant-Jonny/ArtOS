@@ -6,10 +6,10 @@ using UnityEngine.UI;
 
 namespace UIHandTest1 
 {
-	[RequireComponent (typeof(UIHand))]
+	[RequireComponent (typeof(UIController))]
 	public class UIFingers : MonoBehaviour 
 	{
-		private UIHand uiHand; // the parent UIHand component
+		private UIController uiControl; // the parent UIHand component
 
 		public LeapUtil.WhichHand whichHand;
 		public bool useThumb;
@@ -17,16 +17,15 @@ namespace UIHandTest1
 		private bool[] Press;
 		private bool[] PressEvent;
 		private Hand hand;
+		public GameObject toolControl;
 
 		public float buttonPressDistance; // .005f
 		public float buttonPressDistancePinky; // .003f 
 		public float handOffset; //.02f
 
-		public GameObject target;
-
 		void Start ()
 		{
-			uiHand = GetComponent<UIHand>();
+			uiControl = GetComponent<UIController>();
 			Press = new bool[uiCanvases.Length];
 			PressEvent = new bool[uiCanvases.Length];
 			// set all bool arrays to false
@@ -46,7 +45,7 @@ namespace UIHandTest1
 		private void OnFingerButtonPressBegin (int finger)
 		{
 			// send press begin message to other hand
-			ExecuteEvents.Execute<UIMessageTargetIF>( target, null, (x,y)=>x.FingerButtonPressBegin() );
+			ExecuteEvents.Execute<UIMessageTargetIF>( toolControl, null, (x,y)=>x.FingerButtonPressBegin() );
 
 //			Debug.Log ("press begin finger " + finger);
 			Button button = uiCanvases[finger].transform.GetComponent<Button>();
@@ -58,7 +57,7 @@ namespace UIHandTest1
 		private void OnFingerButtonPressEnd (int finger)
 		{
 			// send press end message to other hand
-			ExecuteEvents.Execute<UIMessageTargetIF>( target, null, (x,y)=>x.FingerButtonPressEnd() );
+			ExecuteEvents.Execute<UIMessageTargetIF>( toolControl, null, (x,y)=>x.FingerButtonPressEnd() );
 
 //			Debug.Log ("press end finger " + finger);
 		}
@@ -66,7 +65,7 @@ namespace UIHandTest1
 		void LateUpdate () 
 		{
 			// GET LEFT OR RIGHT HAND
-			HandModel[] hands = uiHand.handController.GetAllGraphicsHands();
+			HandModel[] hands = uiControl.handController.GetAllGraphicsHands();
 			if (hands.Length > 0)
 			{
 				for(int i=0; i < hands.Length; i++) // go through all hands in scene
@@ -83,9 +82,9 @@ namespace UIHandTest1
 			if (hand != null)
 			{
 				// if hand is tracking well and palm is facing away from camera
-				if (hand.Confidence > uiHand.minimumConfidence 
+				if (hand.Confidence > uiControl.minimumConfidence 
 //				    && hand.IsValid
-				    && LeapUtil.CheckPalmFacingCamera(hand, uiHand.handController, uiHand.cameraTransform, uiHand.minimumDotFaceCamera))
+				    && LeapUtil.CheckPalmFacingCamera(hand, uiControl.handController, uiControl.cameraTransform, uiControl.minimumDotFaceCamera))
 				{
 					UIAlphaToggle(true); // unhide UI
 					FingerList fingers = hand.Fingers;
@@ -104,10 +103,10 @@ namespace UIHandTest1
 					
 							// ALIGN UI TO FINGER
 							// get position and rotation of finger ends
-							Vector3 palmNormalWorld = LeapUtil.LeapToWorldRot(hand.PalmNormal, uiHand.handController);
+							Vector3 palmNormalWorld = LeapUtil.LeapToWorldRot(hand.PalmNormal, uiControl.handController);
 							Bone b3 = finger.Bone (Bone.BoneType.TYPE_DISTAL); // get bone 3 (end of finger)
-							Vector3 b3PosWorld = LeapUtil.LeapToWorldPos(b3.Center, uiHand.handController);
-							Vector3 bB3RotWorld = LeapUtil.LeapToWorldRot(b3.Direction, uiHand.handController);
+							Vector3 b3PosWorld = LeapUtil.LeapToWorldPos(b3.Center, uiControl.handController);
+							Vector3 bB3RotWorld = LeapUtil.LeapToWorldRot(b3.Direction, uiControl.handController);
 							// ofset that position out from the palm normal
 							b3PosWorld += (palmNormalWorld * handOffset);
 
@@ -118,7 +117,7 @@ namespace UIHandTest1
 
 							// CHECK IF PRESSING
 							// calculate distance to palm
-							float distanceFromPalmNormal = LeapUtil.DistanceFromPalmNormal(b3PosWorld,hand,uiHand.handController);
+							float distanceFromPalmNormal = LeapUtil.DistanceFromPalmNormal(b3PosWorld,hand,uiControl.handController);
 							// check if distance is over max
 							float distance = buttonPressDistance;
 							if (f == 4) // if pinky

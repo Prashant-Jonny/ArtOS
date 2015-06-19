@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 namespace UIHandTest1 
 {
-	[RequireComponent (typeof(UIHand))]
+	[RequireComponent (typeof(UIController))]
 	public class UIPalm : MonoBehaviour 
 	{
-		private UIHand uiHand; // the parent UIHand component
+		private UIController uiControl; // the parent uiControl component
 
 		public LeapUtil.WhichHand whichHand;
 		private Hand hand;
@@ -18,7 +18,7 @@ namespace UIHandTest1
 
 		void Start ()
 		{
-			uiHand = GetComponent<UIHand>();
+			uiControl = GetComponent<UIController>();
 		}
 
 		void Update ()
@@ -29,7 +29,7 @@ namespace UIHandTest1
 		void LateUpdate () 
 		{
 			// GET LEFT OR RIGHT HAND
-			HandModel[] hands = uiHand.handController.GetAllGraphicsHands();
+			HandModel[] hands = uiControl.handController.GetAllGraphicsHands();
 			if (hands.Length > 0)
 			{
 				for(int i=0; i < hands.Length; i++) // go through all hands in scene
@@ -46,15 +46,15 @@ namespace UIHandTest1
 			if (hand != null)
 			{
 				// if hand is tracking well and palm is facing away from camera
-				if (hand.Confidence > uiHand.minimumConfidence 
-				    && LeapUtil.CheckPalmFacingCamera(hand, uiHand.handController, uiHand.cameraTransform, uiHand.minimumDotFaceCamera))
+				if (hand.Confidence > uiControl.minimumConfidence 
+				    && LeapUtil.CheckPalmFacingCamera(hand, uiControl.handController, uiControl.cameraTransform, uiControl.minimumDotFaceCamera))
 				{
 					UIAlphaToggle(true); // unhide UI
 
 					// ALIGN UI TO FINGERS
 					// get position and rotation of finger ends
-					Vector3 palmNormalWorld = LeapUtil.LeapToWorldRot(hand.PalmNormal, uiHand.handController);
-					Vector3 palmPosWorld = LeapUtil.LeapToWorldPos(hand.PalmPosition, uiHand.handController);
+					Vector3 palmNormalWorld = LeapUtil.LeapToWorldRot(hand.PalmNormal, uiControl.handController);
+					Vector3 palmPosWorld = LeapUtil.LeapToWorldPos(hand.PalmPosition, uiControl.handController);
 					// ofset that position out from the palm normal
 					palmPosWorld += (palmNormalWorld * handOffset);
 
