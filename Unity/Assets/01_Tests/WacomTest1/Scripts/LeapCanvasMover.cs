@@ -1,97 +1,97 @@
-﻿using UnityEngine;
-using System.Collections;
-using Leap;
-
-namespace WacomTest1 { 
-public class LeapCanvasMover : MonoBehaviour 
-{
-	public GameObject canvas;
-	public float turnUpLimit;
-
-	Controller controller;
-	Frame frame;
-	Hand lHand;
-	Hand rHand;
-		
-	bool lHandSpawned = false;
-	GameObject lHandSpawn;
-
-	void Start () 
-	{
-		controller = new Controller();
-		lHand = new Hand();
-		rHand = new Hand();
-	}
-
-	bool grabbing = false;
-	bool grabbingToggle = false;
-	
-	void Update () 
-	{
-		frame = controller.Frame();
-		HandList hands = frame.Hands;
-
-
-		GetHands (hands);
-
-		if (lHand.IsValid)
-		{
-			float lGrab = lHand.GrabStrength;
-			float lPinch = lHand.PinchStrength;
-//			print (lGrab);
-			if (lGrab == 1 )
-			{
-				if(!grabbingToggle)
-				{
-					grabbing = !grabbing;
-				}
-				grabbingToggle = true;
-			} else {
-				grabbingToggle = false;
-			}
-//			float roll = lHand.PalmNormal.Roll;
-//			if (roll > turnUpLimit || roll < -turnUpLimit) // if left hand turned up
+﻿//using UnityEngine;
+//using System.Collections;
+//using Leap;
+//
+//namespace WacomTest1 { 
+//public class LeapCanvasMover : MonoBehaviour 
+//{
+//	public GameObject canvas;
+//	public float turnUpLimit;
+//
+//	Controller controller;
+//	Frame frame;
+//	Hand lHand;
+//	Hand rHand;
+//		
+//	bool lHandSpawned = false;
+//	GameObject lHandSpawn;
+//
+//	void Start () 
+//	{
+//		controller = new Controller();
+//		lHand = new Hand();
+//		rHand = new Hand();
+//	}
+//
+//	bool grabbing = false;
+//	bool grabbingToggle = false;
+//	
+//	void Update () 
+//	{
+//		frame = controller.Frame();
+//		HandList hands = frame.Hands;
+//
+//
+//		GetHands (hands);
+//
+//		if (lHand.IsValid)
+//		{
+//			float lGrab = lHand.GrabStrength;
+//			float lPinch = lHand.PinchStrength;
+////			print (lGrab);
+//			if (lGrab == 1 )
 //			{
-//				MoveCanvas(lHand);
+//				if(!grabbingToggle)
+//				{
+//					grabbing = !grabbing;
+//				}
+//				grabbingToggle = true;
+//			} else {
+//				grabbingToggle = false;
 //			}
-
-			if(grabbing)
-				MoveCanvas(lHand);
-		}
-
-
-		if (rHand.IsValid)
-		{
-			float roll = rHand.PalmNormal.Roll;
-			if (roll > turnUpLimit || roll < -turnUpLimit) // if right hand turned up
-			{
-
-			}
-		}
-	}
-
-	void MoveCanvas(Hand hand)
-	{
-		Vector3 pos = LeapUtil.LeapToWorldPos(hand.PalmPosition,new HandController());
-		canvas.transform.position = pos;
-		canvas.transform.forward = LeapUtil.LeapToWorldRot(hand.Direction, new HandController());
-	}
-
-
-	void GetHands (HandList hands)
-	{
-		foreach (Hand h in hands)
-		{
-			
-			if (h.IsLeft)
-			{
-				lHand = h;
-			}
-			if (h.IsRight)
-			{
-				rHand = h;
-			}
-		}
-	}
-
-}}
+////			float roll = lHand.PalmNormal.Roll;
+////			if (roll > turnUpLimit || roll < -turnUpLimit) // if left hand turned up
+////			{
+////				MoveCanvas(lHand);
+////			}
+//
+//			if(grabbing)
+//				MoveCanvas(lHand);
+//		}
+//
+//
+//		if (rHand.IsValid)
+//		{
+//			float roll = rHand.PalmNormal.Roll;
+//			if (roll > turnUpLimit || roll < -turnUpLimit) // if right hand turned up
+//			{
+//
+//			}
+//		}
+//	}
+//
+//	void MoveCanvas(Hand hand)
+//	{
+//		Vector3 pos = LeapUtil.LeapToWorldPos(hand.PalmPosition,new HandController());
+//		canvas.transform.position = pos;
+//		canvas.transform.forward = LeapUtil.LeapToWorldRot(hand.Direction, new HandController());
+//	}
+//
+//
+//	void GetHands (HandList hands)
+//	{
+//		foreach (Hand h in hands)
+//		{
+//			
+//			if (h.IsLeft)
+//			{
+//				lHand = h;
+//			}
+//			if (h.IsRight)
+//			{
+//				rHand = h;
+//			}
+//		}
+//	}
+//
+//}}

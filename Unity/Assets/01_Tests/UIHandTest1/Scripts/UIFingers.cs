@@ -10,11 +10,12 @@ namespace UIHandTest1
 	{
 		private UIHand uiHand; // the parent UIHand component
 
+		public enum WhichHand {Left, Right}
+		WhichHand whichHand;
 		public CanvasRenderer[] leftHandUI;
 		public bool[] leftHandUIPress;
 		public bool[] leftHandUIPressEvent;
-		public Hand handL;
-		public Hand handR;
+		private Hand hand;
 
 		public float buttonPressDistance; // .005f
 		public float buttonPressDistancePinky; // .003f 
@@ -63,53 +64,64 @@ namespace UIHandTest1
 			{
 				for(int i=0; i < hands.Length; i++) // go through all hands in scene
 				{
-					Hand hand = hands[i].GetLeapHand(); // convert to leap hand
-					if (hand.IsLeft)
+					Hand currentHand = hands[i].GetLeapHand(); // convert to leap hand
+					if (whichHand == WhichHand.Left)
 					{
-						handL = hand;
-						// if hand is tracking well and palm is facing away from camera
-						if (hand.Confidence > minimumConfidence  
-						    && LeapUtil.CheckPalmFacingCamera(hand, uiHand.handController, uiHand.cameraTransform, minimumDotFaceCamera))
-						{
-							UIAlphaToggle(true); // unhide UI
-							FingerList fingers = hand.Fingers;
-							for (int f = 0; f < fingers.Count; f++)
-							{
-								Finger finger = fingers[f];
-
-								// get position and rotation of finger ends
-								Vector3 palmNormalWorld = LeapUtil.LeapToWorldRot(hand.PalmNormal, uiHand.handController);
-								Bone b3 = finger.Bone (Bone.BoneType.TYPE_DISTAL); // get bone 3 (end of finger)
-								Vector3 b3PosWorld = LeapUtil.LeapToWorldPos(b3.Center, uiHand.handController);
-								Vector3 bB3RotWorld = LeapUtil.LeapToWorldRot(b3.Direction, uiHand.handController);
-								// ofset that position out from the palm normal
-								b3PosWorld += (palmNormalWorld * handOffset);
-
-								// set position and rotation of UI element
-								leftHandUI[f].transform.position = b3PosWorld; 
-								leftHandUI[f].transform.forward = palmNormalWorld;
-
-								// calculate distance to palm
-								float distanceFromPalmNormal = LeapUtil.DistanceFromPalmNormal(b3PosWorld,hand,uiHand.handController);
-								// check if distance is over max
-								float distance = buttonPressDistance;
-								if (f == 4) // if pinky
-									distance = buttonPressDistancePinky; // set to pinky distance
-								if (distanceFromPalmNormal > distance)
-								{
-									leftHandUIPress[f] = true;
-								} else {
-									leftHandUIPress[f] = false;
-								}
-							}
-						}
+						if (currentHand.IsLeft) 
+							hand = currentHand;
 						else 
-						{
-							UIAlphaToggle(false); // hide UI
-						}
-					} else {
-						handL = null;
+							hand = null;
 					}
+					if (whichHand == WhichHand.Right)
+					{
+						if (currentHand.IsRight) 
+							hand = currentHand;
+					}
+				}
+			}
+						
+			// if hand is present
+			if (hand != null)
+			{
+				// if hand is tracking well and palm is facing away from camera
+				if (hand.Confidence > minimumConfidence 
+				    && LeapUtil.CheckPalmFacingCamera(hand, uiHand.handController, uiHand.cameraTransform, minimumDotFaceCamera))
+				{
+					UIAlphaToggle(true); // unhide UI
+					FingerList fingers = hand.Fingers;
+					for (int f = 0; f < fingers.Count; f++)
+					{
+						Finger finger = fingers[f];
+
+						// get position and rotation of finger ends
+						Vector3 palmNormalWorld = LeapUtil.LeapToWorldRot(hand.PalmNormal, uiHand.handController);
+						Bone b3 = finger.Bone (Bone.BoneType.TYPE_DISTAL); // get bone 3 (end of finger)
+						Vector3 b3PosWorld = LeapUtil.LeapToWorldPos(b3.Center, uiHand.handController);
+						Vector3 bB3RotWorld = LeapUtil.LeapToWorldRot(b3.Direction, uiHand.handController);
+						// ofset that position out from the palm normal
+						b3PosWorld += (palmNormalWorld * handOffset);
+
+						// set position and rotation of UI element
+						leftHandUI[f].transform.position = b3PosWorld; 
+						leftHandUI[f].transform.forward = palmNormalWorld;
+
+						// calculate distance to palm
+						float distanceFromPalmNormal = LeapUtil.DistanceFromPalmNormal(b3PosWorld,hand,uiHand.handController);
+						// check if distance is over max
+						float distance = buttonPressDistance;
+						if (f == 4) // if pinky
+							distance = buttonPressDistancePinky; // set to pinky distance
+						if (distanceFromPalmNormal > distance)
+						{
+							leftHandUIPress[f] = true;
+						} else {
+							leftHandUIPress[f] = false;
+						}
+					}
+				}
+				else 
+				{
+					UIAlphaToggle(false); // hide UI
 				}
 			}
 			DetectFingerButtonPressEvents();
