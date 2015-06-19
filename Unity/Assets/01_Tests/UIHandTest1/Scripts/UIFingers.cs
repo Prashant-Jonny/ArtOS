@@ -57,16 +57,26 @@ namespace UIHandTest1
 
 		void LateUpdate () 
 		{
-			if (whichHand == LeapUtil.WhichHand.Left)
-				hand = LeapUtil.GetLeftHand(uiHand);
-			if (whichHand == LeapUtil.WhichHand.Right)
-				hand = LeapUtil.GetRightHand(uiHand);
-			Debug.Log (hand);
-			// if hand is present
+			// Get Hand
+			HandModel[] hands = uiHand.handController.GetAllGraphicsHands();
+			if (hands.Length > 0)
+			{
+				for(int i=0; i < hands.Length; i++) // go through all hands in scene
+				{
+					Hand currentHand = hands[i].GetLeapHand(); // convert to leap hand
+					if (whichHand == LeapUtil.WhichHand.Left && currentHand.IsLeft) 
+						hand = currentHand;
+					if (whichHand == LeapUtil.WhichHand.Right && currentHand.IsRight)
+						hand = currentHand;
+				}
+			}
+
+			// ALIGN UI TO FINGERS AND CHECK IF PRESSING
 			if (hand != null)
 			{
 				// if hand is tracking well and palm is facing away from camera
 				if (hand.Confidence > minimumConfidence 
+//				    && hand.IsValid
 				    && LeapUtil.CheckPalmFacingCamera(hand, uiHand.handController, uiHand.cameraTransform, minimumDotFaceCamera))
 				{
 					UIAlphaToggle(true); // unhide UI
@@ -75,6 +85,7 @@ namespace UIHandTest1
 					{
 						Finger finger = fingers[f];
 
+						// ALIGN UI TO FINGERS
 						// get position and rotation of finger ends
 						Vector3 palmNormalWorld = LeapUtil.LeapToWorldRot(hand.PalmNormal, uiHand.handController);
 						Bone b3 = finger.Bone (Bone.BoneType.TYPE_DISTAL); // get bone 3 (end of finger)
@@ -87,6 +98,7 @@ namespace UIHandTest1
 						uiCanvases[f].transform.position = b3PosWorld; 
 						uiCanvases[f].transform.forward = palmNormalWorld;
 
+						// CHECK IF PRESSING
 						// calculate distance to palm
 						float distanceFromPalmNormal = LeapUtil.DistanceFromPalmNormal(b3PosWorld,hand,uiHand.handController);
 						// check if distance is over max
