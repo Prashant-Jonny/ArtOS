@@ -5,13 +5,14 @@ using Leap;
 
 namespace UIHandTest1 
 {
-	[RequireComponent (typeof(UIController))]
+	[RequireComponent (typeof(ToolController))]
 	public class ToolPalm : MonoBehaviour , ToolMessageTargetIF
 	{
 		private ToolController toolControl; // the parent ToolController
 
 		public LeapUtil.WhichHand whichHand;
 		private Hand hand;
+		public HandModel handModel;
 
 		void Start ()
 		{
@@ -59,9 +60,15 @@ namespace UIHandTest1
 				{
 					Hand currentHand = hands[i].GetLeapHand(); // convert to leap hand
 					if (whichHand == LeapUtil.WhichHand.Left && currentHand.IsLeft) 
+					{
 						hand = currentHand;
+						handModel = toolControl.handController.GetHandModelForLeapId(hand.Id);
+					}
 					if (whichHand == LeapUtil.WhichHand.Right && currentHand.IsRight)
+					{
 						hand = currentHand;
+						handModel = toolControl.handController.GetHandModelForLeapId(hand.Id);
+					}
 				}
 			}
 
