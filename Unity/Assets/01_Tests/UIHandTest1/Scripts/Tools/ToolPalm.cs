@@ -1,29 +1,58 @@
-﻿using UnityEngine;
+﻿	using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections;
 using Leap;
 
-public class ToolPalm : MonoBehaviour , ToolMessageTargetIF
+namespace UIHandTest1 
 {
-
-	void Start ()
+	[RequireComponent (typeof(UIController))]
+	public class ToolPalm : MonoBehaviour , ToolMessageTargetIF
 	{
-	
-	}
-	
-	void Update () 
-	{
-	
-	}
+		private ToolController toolControl; // the parent ToolController
 
-	public void FingerButtonPressBegin()
-	{
-		print ("press begin message received");
-	}
+		public LeapUtil.WhichHand whichHand;
+		private Hand hand;
 
-	public void FingerButtonPressEnd()
-	{
-		print ("press end message received");
+		void Start ()
+		{
+			toolControl = GetComponent<ToolController>();
+		}
 
+		public void FingerButtonPressBegin(int finger)
+		{
+			print ("press begin message received " + finger);
+			if (finger == 1)
+			{
+				Vector3 palmPosWorld = LeapUtil.LeapToWorldPos(hand.PalmPosition,toolControl.handController);
+				Vector3 palmRotWorld = LeapUtil.LeapToWorldRot(hand.PalmNormal, toolControl.handController);
+				Quaternion palmRotWorldQuat = Quaternion.LookRotation(palmRotWorld);
+
+				GameObject.Instantiate(Resources.Load ("Cube"), palmPosWorld, palmRotWorldQuat);
+			}
+		}
+
+		public void FingerButtonPressEnd(int finger)
+		{
+			print ("press end message received " + finger);
+
+		}
+
+		void LateUpdate ()
+		{
+			// GET LEFT OR RIGHT HAND
+			HandModel[] hands = toolControl.handController.GetAllGraphicsHands();
+			if (hands.Length > 0)
+			{
+				for(int i=0; i < hands.Length; i++) // go through all hands in scene
+				{
+					Hand currentHand = hands[i].GetLeapHand(); // convert to leap hand
+					if (whichHand == LeapUtil.WhichHand.Left && currentHand.IsLeft) 
+						hand = currentHand;
+					if (whichHand == LeapUtil.WhichHand.Right && currentHand.IsRight)
+						hand = currentHand;
+				}
+			}
+
+		}
 	}
 }
