@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Leap;
+using UnityEngine.UI;
 
 namespace UIHandTest1 
 {
@@ -21,13 +22,11 @@ namespace UIHandTest1
 		public float minimumConfidence; //.5f
 		public float minimumDotFaceCamera; // 0f
 
-//		public bool handLEnter;
-//		public bool handLExit;
-
 		void Start ()
 		{
 			leftHandUIPress = new bool[leftHandUI.Length];
 			leftHandUIPressEvent = new bool[leftHandUI.Length];
+			// set all bool arrays to false
 			for (int i = 0; i < leftHandUIPress.Length; i++)
 			{
 				leftHandUIPress[i] = false;
@@ -44,6 +43,13 @@ namespace UIHandTest1
 		private void OnFingerButtonPressBegin (int finger)
 		{
 			Debug.Log ("press begin finger " + finger);
+
+			if (finger == 1)
+			{
+				Button button = leftHandUI[1].transform.GetComponent<Button>();
+				button.onClick.Invoke();
+			}
+				
 		}
 
 		private void OnFingerButtonPressEnd (int finger)
@@ -74,6 +80,7 @@ namespace UIHandTest1
 					Hand hand = hands[i].GetLeapHand(); // convert to leap hand
 					if (hand.IsLeft)
 					{
+						handL = hand;
 						// if hand is tracking well and palm is facing away from camera
 						if (hand.Confidence > minimumConfidence  && CheckPalmFacingCamera(hand, cameraTransform))
 						{
@@ -118,6 +125,8 @@ namespace UIHandTest1
 						{
 							UIAlphaToggle(false); // hide UI
 						}
+					} else {
+						handL = null;
 					}
 				}
 			}
