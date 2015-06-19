@@ -6,6 +6,7 @@ namespace UIHandTest1
 {
 	public class UIHand : MonoBehaviour 
 	{
+		public Transform cameraTransform; // used to figure out if palm is turned toward camera
 		public Transform ui;
 		public CanvasRenderer[] leftHandUI;
 		public bool[] leftHandUIPress;
@@ -15,9 +16,10 @@ namespace UIHandTest1
 		public Hand handL;
 		public Hand handR;
 
-		public float buttonPressDistance; // .004f
+		public float buttonPressDistance; // .005f
 		public float handOffset; //.02f
 		public float minimumConfidence; //.5f
+		public float minimumDotFaceCamera; // 0f
 
 //		public bool handLEnter;
 //		public bool handLExit;
@@ -39,14 +41,24 @@ namespace UIHandTest1
 		}
 
 		// triggered
-		void OnFingerButtonPressBegin (int finger)
+		private void OnFingerButtonPressBegin (int finger)
 		{
 
 		}
 
-		void OnFingerButtonPressEnd (int finger)
+		private void OnFingerButtonPressEnd (int finger)
 		{
 			
+		}
+
+		private bool CheckPalmFacingCamera (Hand hand, Transform cam)
+		{
+			Vector3 palmNormal = LeapUtil.LeapToWorldRot(hand.PalmNormal, handController);
+			float palmCamDot = Vector3.Dot (palmNormal, cam.forward);
+			if (palmCamDot < minimumDotFaceCamera)
+				return true;
+			else
+				return false;
 		}
 
 		void LateUpdate () 
@@ -62,7 +74,7 @@ namespace UIHandTest1
 					Hand hand = hands[i].GetLeapHand(); // convert to leap hand
 					if (hand.IsLeft)
 					{
-						if (hand.Confidence > minimumConfidence)
+						if (hand.Confidence > minimumConfidence  && CheckPalmFacingCamera(hand, cameraTransform))
 						{
 							UIAlphaToggle(true);
 							FingerList fingers = hand.Fingers;
@@ -113,14 +125,13 @@ namespace UIHandTest1
 
 		// UTILITY FUNCTIONS
 		
-		void DetectFingerButtonPressEvents ()
+		private void DetectFingerButtonPressEvents ()
 		{
 			for (int i = 0; i < leftHandUI.Length; i++)
 			{
 				if (leftHandUIPress[i] && leftHandUIPressEvent[i])
 				{
 					leftHandUIPressEvent[i] = false;
-					Debug.Log ("press began");
 					// BUTTON PRESS BEGIN EVENT
 					OnFingerButtonPressBegin(i);
 				}
@@ -128,7 +139,6 @@ namespace UIHandTest1
 				if (!leftHandUIPress[i] && !leftHandUIPressEvent[i])
 				{
 					leftHandUIPressEvent[i] = true;
-					Debug.Log ("press ended");
 					// BUTTON PRESS END EVENT
 					OnFingerButtonPressEnd(i);
 				} 
@@ -137,7 +147,7 @@ namespace UIHandTest1
 		}
 
 
-		void UIAlphaToggle (bool on)
+		private void UIAlphaToggle (bool on)
 		{
 			for (int i = 0; i < leftHandUI.Length; i++)
 			{
