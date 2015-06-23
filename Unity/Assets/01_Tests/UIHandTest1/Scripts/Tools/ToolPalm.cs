@@ -42,8 +42,11 @@ namespace UIHandTest1
 			{
 				ToolSelect ();
 			}
+			if (finger == 4)
+			{
+				ToolDelete ();
+			}
 		}
-
 
 		public void ToolSelect()
 		{
@@ -58,6 +61,20 @@ namespace UIHandTest1
 			GameObject selectTarget = rigidHandOpposite.currentCollider;		
 			ExecuteEvents.Execute<ArtObjectMessageTargetIF>( selectTarget, null, (x,y)=>x.Select() );
 
+		}
+
+		public void ToolDelete ()
+		{
+			// get the opposite hands UIrigidHand component
+			UIHandRigidHand rigidHandOpposite;
+			if (handModelOpposite != null)
+				rigidHandOpposite = handModelOpposite.transform.GetComponent<UIHandRigidHand>();
+			else
+				return;
+			
+			// get what the rigidhand is touching
+			GameObject selectTarget = rigidHandOpposite.currentCollider;		
+			ExecuteEvents.Execute<ArtObjectMessageTargetIF>( selectTarget, null, (x,y)=>x.Delete() );
 		}
 
 		public void FingerButtonPressEnd(int finger)

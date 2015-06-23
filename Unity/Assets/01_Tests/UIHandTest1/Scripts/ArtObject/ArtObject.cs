@@ -23,12 +23,14 @@ namespace UIHandTest1
 
 		public void Select ()
 		{
-			print ("select: " + gameObject.name);
+//			print ("select: " + gameObject.name);
+			gameObject.GetComponent<Renderer>().material.color = Color.red;
 		}
 
 		public void Delete ()
 		{
-			print ("delete: " + gameObject.name);
+//			print ("delete: " + gameObject.name);
+			Destroy(gameObject);
 		}
 
 		void OnTriggerEnter (Collider collider)
