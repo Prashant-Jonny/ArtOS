@@ -9,17 +9,33 @@ namespace UIHandTest1
 		// so that tools can check for collision with a hand or finger
 		public GameObject currentCollider;
 
-		public void OnChildTriggerStaySender(GameObject sender)
+		public void OnChildCollisionEnterSender(GameObject sender)
 		{
 			// sender is the bone on the finger in this case
 		}
 
-		public void OnChildTriggerStay(Collider collider)
+		public void OnChildCollisionEnter(Collision collision)
 		{
-			currentCollider = collider.gameObject;
+			currentCollider = collision.gameObject;
 		}
 
-		public void OnChildTriggerExit(Collider collider)
+
+		public void OnChildCollisionStaySender(GameObject sender)
+		{
+			// sender is the bone on the finger in this case
+		}
+
+		public void OnChildCollisionStay(Collision collision)
+		{
+			currentCollider = collision.gameObject;
+		}
+
+		public void OnChildCollisionExitSender(GameObject sender)
+		{
+			// sender is the bone on the finger in this case
+		}
+
+		public void OnChildCollisionExit(Collision collider)
 		{
 			currentCollider = null;
 		}

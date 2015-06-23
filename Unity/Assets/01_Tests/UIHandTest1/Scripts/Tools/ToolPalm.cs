@@ -29,7 +29,7 @@ namespace UIHandTest1
 
 			if (finger == 1)
 			{
-				if (hand != null && handControl != null)
+				if (handOpposite != null && handControl != null)
 				{
 					Vector3 spawnPos = LeapUtil.LeapToWorldPos(handOpposite.PalmPosition, handControl);
 					Vector3 spawnRot = LeapUtil.LeapToWorldRot(handOpposite.PalmNormal, handControl);
@@ -38,16 +38,21 @@ namespace UIHandTest1
 					GameObject.Instantiate(Resources.Load ("Cube"), spawnPos, spawnRotQuat);
 				}
 			}
-//			if (finger == 2)
-//			{
-//				ToolSelect ();
-//			}
+			if (finger == 2)
+			{
+				ToolSelect ();
+			}
 		}
+
 
 		public void ToolSelect()
 		{
-			// get the rigidHand component
-			UIHandRigidHand rigidHandOpposite = handModelOpposite.transform.GetComponent<UIHandRigidHand>();
+			// get the opposite hands UIrigidHand component
+			UIHandRigidHand rigidHandOpposite;
+			if (handModelOpposite != null)
+				rigidHandOpposite = handModelOpposite.transform.GetComponent<UIHandRigidHand>();
+			else
+				return;
 
 			// get what the rigidhand is touching
 			GameObject selectTarget = rigidHandOpposite.currentCollider;		
