@@ -90,8 +90,24 @@ namespace UIHandTest1
 					}
 				}
 
+				if (whichHand == LeapUtil.WhichHand.Right) 
+				{
+					for(int i=0; i < hands.Length; i++) // go through all hands in scene
+					{
+						Hand currentHand = hands[i].GetLeapHand(); // convert to leap hand
+						if (currentHand != null && currentHand.IsRight)
+						{
+							hand = currentHand;
+							handModel = handControl.GetHandModelForLeapId(hand.Id);
+						}
+						if (currentHand != null && currentHand.IsLeft) 
+						{
+							handOpposite = currentHand;
+							handModelOpposite = handControl.GetHandModelForLeapId(handOpposite.Id);
+						}
+					}
+				}
 			}
-
 		}
 	}
 }
