@@ -1,4 +1,4 @@
-﻿	using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections;
 using Leap;
@@ -9,44 +9,57 @@ namespace UIHandTest1
 	public class ToolPalm : MonoBehaviour , ToolMessageTargetIF
 	{
 		private ToolController toolControl; // the parent ToolController
+		private HandController handControl;
 
 		public LeapUtil.WhichHand whichHand;
 		private Hand hand;
+		private Hand handOpposite;
 		public HandModel handModel;
+		public HandModel handModelOpposite;
 
 		void Start ()
 		{
 			toolControl = GetComponent<ToolController>();
+			handControl = toolControl.handController;
 		}
 
 		public void FingerButtonPressBegin(int finger)
 		{
 //			print ("press begin message received " + finger);
 
-			// temp hacky dipes
-			if (finger == 1)
-			{
-				Vector3 palmPosWorld = LeapUtil.LeapToWorldPos(hand.PalmPosition,toolControl.handController);
-				Vector3 palmRotWorld = LeapUtil.LeapToWorldRot(hand.PalmNormal, toolControl.handController);
-				Quaternion palmRotWorldQuat = Quaternion.LookRotation(palmRotWorld);
-
-				GameObject.Instantiate(Resources.Load ("Cube"), palmPosWorld, palmRotWorldQuat);
-			}
-			if (finger == 2)
-			{
-				print ("select tool");
-				SelectTool ();
-			}
+//			if (finger == 1)
+//			{
+//				Vector3 spawnPos = LeapUtil.LeapToWorldPos(hand.PalmPosition,toolControl.handController);
+//				Vector3 spawnRot = LeapUtil.LeapToWorldRot(hand.PalmNormal, toolControl.handController);
+//				Quaternion spawnRotQuat = Quaternion.LookRotation(spawnRot);
+//
+//				GameObject.Instantiate(Resources.Load ("Cube"), spawnPos, spawnRotQuat);
+//			}
+//			if (finger == 2)
+//			{
+//				ToolSelect ();
+//			}
 		}
 
-		public void SelectTool()
+		public void ToolSelect()
 		{
-			
+			// get the rigidHand component
+			UIHandRigidHand rigidHandOpposite = handModelOpposite.transform.GetComponent<UIHandRigidHand>();
+
+			// get what the rigidhand is touching
+			GameObject selectTarget = rigidHandOpposite.currentCollider;		
+			ExecuteEvents.Execute<ArtObjectMessageTargetIF>( selectTarget, null, (x,y)=>x.Select() );
+
 		}
 
 		public void FingerButtonPressEnd(int finger)
 		{
 //			print ("press end message received " + finger);
+
+		}
+
+		void Update ()
+		{
 
 		}
 
@@ -56,20 +69,24 @@ namespace UIHandTest1
 			HandModel[] hands = toolControl.handController.GetAllGraphicsHands();
 			if (hands.Length > 0)
 			{
-				for(int i=0; i < hands.Length; i++) // go through all hands in scene
+				if (whichHand == LeapUtil.WhichHand.Left) 
 				{
-					Hand currentHand = hands[i].GetLeapHand(); // convert to leap hand
-					if (whichHand == LeapUtil.WhichHand.Left && currentHand.IsLeft) 
+					for(int i=0; i < hands.Length; i++) // go through all hands in scene
 					{
-						hand = currentHand;
-						handModel = toolControl.handController.GetHandModelForLeapId(hand.Id);
-					}
-					if (whichHand == LeapUtil.WhichHand.Right && currentHand.IsRight)
-					{
-						hand = currentHand;
-						handModel = toolControl.handController.GetHandModelForLeapId(hand.Id);
+						Hand currentHand = hands[i].GetLeapHand(); // convert to leap hand
+						if (currentHand.IsLeft)
+						{
+							hand = currentHand;
+							handModel = toolControl.handController.GetHandModelForLeapId(hand.Id);
+						}
+						if (currentHand.IsRight) 
+						{
+							handOpposite = currentHand;
+							handModelOpposite = toolControl.handController.GetHandModelForLeapId(hand.Id);
+						}
 					}
 				}
+
 			}
 
 		}

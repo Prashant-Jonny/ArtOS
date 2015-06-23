@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Leap;
-using UnityEngine.UI;
 
 namespace UIHandTest1 
 {
