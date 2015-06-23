@@ -27,14 +27,17 @@ namespace UIHandTest1
 		{
 //			print ("press begin message received " + finger);
 
-//			if (finger == 1)
-//			{
-//				Vector3 spawnPos = LeapUtil.LeapToWorldPos(hand.PalmPosition,toolControl.handController);
-//				Vector3 spawnRot = LeapUtil.LeapToWorldRot(hand.PalmNormal, toolControl.handController);
-//				Quaternion spawnRotQuat = Quaternion.LookRotation(spawnRot);
-//
-//				GameObject.Instantiate(Resources.Load ("Cube"), spawnPos, spawnRotQuat);
-//			}
+			if (finger == 1)
+			{
+				if (hand != null && handControl != null)
+				{
+					Vector3 spawnPos = LeapUtil.LeapToWorldPos(handOpposite.PalmPosition, handControl);
+					Vector3 spawnRot = LeapUtil.LeapToWorldRot(handOpposite.PalmNormal, handControl);
+					Quaternion spawnRotQuat = Quaternion.LookRotation(spawnRot);
+
+					GameObject.Instantiate(Resources.Load ("Cube"), spawnPos, spawnRotQuat);
+				}
+			}
 //			if (finger == 2)
 //			{
 //				ToolSelect ();
@@ -66,7 +69,7 @@ namespace UIHandTest1
 		void LateUpdate ()
 		{
 			// GET LEFT OR RIGHT HAND
-			HandModel[] hands = toolControl.handController.GetAllGraphicsHands();
+			HandModel[] hands = handControl.GetAllPhysicsHands();
 			if (hands.Length > 0)
 			{
 				if (whichHand == LeapUtil.WhichHand.Left) 
@@ -74,15 +77,15 @@ namespace UIHandTest1
 					for(int i=0; i < hands.Length; i++) // go through all hands in scene
 					{
 						Hand currentHand = hands[i].GetLeapHand(); // convert to leap hand
-						if (currentHand.IsLeft)
+						if (currentHand != null && currentHand.IsLeft)
 						{
 							hand = currentHand;
-							handModel = toolControl.handController.GetHandModelForLeapId(hand.Id);
+							handModel = handControl.GetHandModelForLeapId(hand.Id);
 						}
-						if (currentHand.IsRight) 
+						if (currentHand != null && currentHand.IsRight) 
 						{
 							handOpposite = currentHand;
-							handModelOpposite = toolControl.handController.GetHandModelForLeapId(hand.Id);
+							handModelOpposite = handControl.GetHandModelForLeapId(handOpposite.Id);
 						}
 					}
 				}
